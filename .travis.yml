@@ -1,0 +1,27 @@
+language: python
+
+
+include:
+
+  - python: 3.6
+
+before_install:
+
+  - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+  - chmod +x miniconda.sh
+  - ./miniconda.sh -b
+  - export PATH=/home/travis/miniconda2/bin:$PATH
+  - conda update --yes conda
+
+install:
+
+  - conda create --yes -n test python=$TRAVIS_PYTHON_VERSION
+  - source activate test
+
+  - conda install --yes -c potassco clingo
+  - conda install --yes -c conda-forge hypothesis
+  - conda install --yes -c anaconda pylint
+
+script:
+
+  - pylint --extension-pkg-whitelist=clingo -E main.py
