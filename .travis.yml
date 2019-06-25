@@ -24,4 +24,4 @@ install:
 
 script:
 
-  - pylint --extension-pkg-whitelist=clingo -E main.py
+  - pylint -E main.py
