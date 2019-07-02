@@ -19,9 +19,10 @@ install:
   - source activate test
 
   - conda install --yes -c potassco clingo
-  - conda install --yes -c conda-forge hypothesis
   - conda install --yes -c anaconda pylint
+  - conda install --yes -c anaconda pytest 
 
 script:
 
-  - pylint -E main.py
+  - pylint -E main.py test/test_world_view.py
+  - python3 -m pytest
