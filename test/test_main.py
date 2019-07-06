@@ -12,5 +12,5 @@ def test_prog():
         pretty_result = support.formalize(result)
         with open(OUTPUT_PATH + 'sol0%s.txt' % i, 'r') as myfile:
             sol = myfile.read()
-            sol = sol.replace('\n','')
+            sol = sol.replace('\n', '')
         assert pretty_result == sol

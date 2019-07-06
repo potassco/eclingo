@@ -28,6 +28,27 @@ def add_atom(term, read_dict, write_dict, backend):
     return literal, write_dict
 
 
+def get_literal(term, read_dict, write_dict, backend):
+    term, neg = check_neg(term)
+    literal, write_dict = \
+        add_atom(term, read_dict, write_dict, backend)
+    if neg:
+        literal = (0-literal)
+
+    return literal, write_dict
+
+
+def add_constraint(epistemic, symbolic_atom, program, write_dict, backend):
+    new_literal = backend.add_atom(symbolic_atom)
+    write_dict.update({new_literal: symbolic_atom})
+    if 'aux_not' in epistemic.name:
+        new_literal = 0-new_literal
+    backend.add_rule([], [new_literal], False)
+    program.append(([], [new_literal], False))
+
+    return program, write_dict
+
+
 def load_program(program, read_dict, backend):
     write_dict = {}
     new_program = []
@@ -35,21 +56,13 @@ def load_program(program, read_dict, backend):
         new_program_head = []
         new_program_body = []
         for term in head:
-            term, neg = check_neg(term)
             literal, write_dict = \
-                add_atom(term, read_dict, write_dict, backend)
-            if neg:
-                new_program_head.append(0-literal)
-            else:
-                new_program_head.append(literal)
+                get_literal(term, read_dict, write_dict, backend)
+            new_program_head.append(literal)
         for term in body:
-            term, neg = check_neg(term)
             literal, write_dict = \
-                add_atom(term, read_dict, write_dict, backend)
-            if neg:
-                new_program_body.append(0-literal)
-            else:
-                new_program_body.append(literal)
+                get_literal(term, read_dict, write_dict, backend)
+            new_program_body.append(literal)
         new_program.append((new_program_head, new_program_body, choice))
         backend.add_rule(new_program_head, new_program_body, choice)
 
@@ -87,6 +100,39 @@ def build_pi_aux(rules, symbolic_pi_atoms, theory_pi_atoms, backend):
     return pi_aux, symbolic_pi_atoms, epistemic_atoms
 
 
+def build_pi_m(pi_aux, symbolic_pi_aux_atoms, epistemic_atoms, candidates, backend):
+    symbolic_pi_m_atoms = {}
+    pi_m = []
+    for (head, body, choice) in pi_aux:
+        if (not choice) and (head[0] not in epistemic_atoms.keys()):
+            pi_head = []
+            pi_body = []
+            in_candidates = True
+            for term in head:
+                literal, symbolic_pi_m_atoms = \
+                    get_literal(term, symbolic_pi_aux_atoms, symbolic_pi_m_atoms, backend)
+                pi_head.append(literal)
+            for term in body:
+                term, neg = check_neg(term)
+                symbol = symbolic_pi_aux_atoms.get(term)
+                if symbol in epistemic_atoms.keys():
+                    if ((symbol not in candidates) and
+                            (not neg)) or ((symbol in candidates) and (neg)):
+                        in_candidates = False
+                        break
+                else:
+                    literal = backend.add_atom(symbol)
+                    symbolic_pi_m_atoms.update({literal: symbol})
+                    if neg:
+                        pi_body.append(0-literal)
+                    else:
+                        pi_body.append(literal)
+            if in_candidates:
+                pi_m.append((pi_head, pi_body, choice))
+
+    return pi_m, symbolic_pi_m_atoms
+
+
 def process(input_program):
     observer = Observer()
     control = clingo.Control()
@@ -109,9 +155,35 @@ def process(input_program):
             load_program(pi_aux, symbolic_pi_atoms, backend)
 
     control.configuration.solve.models = 0
-    models = []
     with control.solve(yield_=True) as handle:
-        for model in handle:
-            models.append(model.symbols(atoms=True))
+        candidates = {frozenset([symbol for symbol in model.symbols(atoms=True)
+                                 if symbol in epistemic_atoms.keys()]) for model in handle}
 
-    return models
+    world_views = set()
+    for world_view in candidates:
+        with control.backend() as backend:
+            pi_m, symbolic_pi_m_atoms = \
+                 build_pi_m(new_pi_aux, symbolic_pi_aux_atoms,
+                            epistemic_atoms, world_view, backend)
+
+        failed = False
+        for epistemic, symbolic in epistemic_atoms.items():
+            control_m = clingo.Control()
+            with control_m.backend() as backend:
+                pi_m_program, pi_m_atoms = \
+                    load_program(pi_m, symbolic_pi_m_atoms, backend)
+                pi_m_program, pi_m_atoms = \
+                    add_constraint(epistemic, symbolic, pi_m_program,
+                                   pi_m_atoms, backend)
+
+            test_result = control_m.solve()
+            if (epistemic in world_view) and (test_result.satisfiable):
+                failed = True
+                break
+            elif (epistemic not in world_view) and (test_result.unsatisfiable):
+                failed = True
+                break
+        if not failed:
+            world_views.add(world_view)
+
+    return world_views
