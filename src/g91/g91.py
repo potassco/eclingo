@@ -178,19 +178,16 @@ def process(input_program):
         (pi_aux, epistemic_atoms) = \
             build_pi_aux(observer.rules, symbolic_pi_atoms, theory_pi_atoms, backend)
 
-
     candidates_gen = clingo.Control(['0', '--project'])
     with candidates_gen.backend() as backend:
         symbolic_pi_aux_atoms = \
             load_program(pi_aux, symbolic_pi_atoms, backend)
         append_epistemic_rules(epistemic_atoms, symbolic_pi_aux_atoms, backend)
-        
+
     candidates_gen.add('base', [], generate_show_directives(epistemic_atoms))
     candidates_gen.ground([('base', [])])
     with candidates_gen.solve(yield_=True) as handle:
-        candidates = {frozenset([symbol for symbol in model.symbols(shown=True)])
-                      for model in handle}
-
+        candidates = {frozenset(model.symbols(shown=True)) for model in handle}
 
     world_views = set()
     for world_view in candidates:
