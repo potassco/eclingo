@@ -1,6 +1,6 @@
 import clingo
 
-THEORY_PATH = "asp/theory/theory.lp"
+THEORY_PATH = 'asp/theory/theory.lp'
 
 
 class Observer:
@@ -92,6 +92,14 @@ def append_epistemic_rules(epistemic_atoms, symbolic_pi_atoms, backend):
         backend.add_rule([], [epistemic_literal, atom_literal], False)
 
 
+def generate_show_directives(epistemic_atoms):
+    string = ''
+    for atom in epistemic_atoms:
+        string = string + ('#show %s/%d.\n' % (atom.name, len(atom.arguments)))
+
+    return string
+
+
 def build_pi_aux(rules, symbolic_pi_atoms, theory_pi_atoms, backend):
     epistemic_atoms = {}
     pi_aux = []
@@ -161,7 +169,7 @@ def process(input_program):
 
     observer = Observer()
     parser.register_observer(observer, False)
-    parser.ground([("base", [])])
+    parser.ground([('base', [])])
 
     symbolic_pi_atoms = {x.literal: x.symbol for x in parser.symbolic_atoms}
     theory_pi_atoms = {x.literal: x.elements[0].terms[0] for x in parser.theory_atoms}
@@ -171,16 +179,17 @@ def process(input_program):
             build_pi_aux(observer.rules, symbolic_pi_atoms, theory_pi_atoms, backend)
 
 
-    candidates_gen = clingo.Control()
+    candidates_gen = clingo.Control(['0', '--project'])
     with candidates_gen.backend() as backend:
         symbolic_pi_aux_atoms = \
             load_program(pi_aux, symbolic_pi_atoms, backend)
         append_epistemic_rules(epistemic_atoms, symbolic_pi_aux_atoms, backend)
-
-    candidates_gen.configuration.solve.models = 0
+        
+    candidates_gen.add('base', [], generate_show_directives(epistemic_atoms))
+    candidates_gen.ground([('base', [])])
     with candidates_gen.solve(yield_=True) as handle:
-        candidates = {frozenset([symbol for symbol in model.symbols(atoms=True)
-                                 if symbol in epistemic_atoms.keys()]) for model in handle}
+        candidates = {frozenset([symbol for symbol in model.symbols(shown=True)])
+                      for model in handle}
 
 
     world_views = set()
