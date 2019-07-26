@@ -114,10 +114,11 @@ def build_pi_aux(rules, symbolic_pi_atoms, theory_pi_atoms, backend):
     return pi_aux, epistemic_atoms
 
 
-def process(input_program):
+def process(models, input_files):
     parser = clingo.Control()
     parser.load(THEORY_PATH)
-    parser.load(input_program)
+    for input_file in input_files:
+        parser.load(input_file)
 
     observer = Observer()
     parser.register_observer(observer, False)
@@ -141,6 +142,7 @@ def process(input_program):
 
     candidates_gen.add('base', [], generate_show_directives(epistemic_atoms))
     candidates_gen.ground([('base', [])])
+    model_count = 0
     with candidates_gen.solve(yield_=True) as candidates_gen_handle:
         for model in candidates_gen_handle:
             k_lits = []
@@ -195,4 +197,8 @@ def process(input_program):
                                 break
 
             if test:
+                model_count += 1
                 yield model.symbols(shown=True)
+
+            if (models != 0) and (model_count == models):
+                break
