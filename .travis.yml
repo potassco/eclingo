@@ -24,5 +24,5 @@ install:
 
 script:
 
-  - pylint -E main.py test/test_main.py
+  - pylint -E main.py src/g91/g91.py test/test_main.py test/support/support.py
   - python3 -m pytest
