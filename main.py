@@ -7,7 +7,8 @@ def main():
     parser.add_argument('input_program', type=str, help='input program path')
     args = parser.parse_args()
 
-    print(g91.process(args.input_program))
+    result = {frozenset(model) for model in g91.process(args.input_program)}
+    print(result)
 
 
 if __name__ == "__main__":
