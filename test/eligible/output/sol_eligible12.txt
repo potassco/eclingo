@@ -1,0 +1,3 @@
+[
+[-eligible(van), eligible(mary), eligible(nancy), eligible(paul), eligible(sam), eligible(tim), eligible(vic), eligible(walt)]
+]

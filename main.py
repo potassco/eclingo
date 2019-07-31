@@ -10,8 +10,8 @@ def main():
     parser.add_argument('input_files', nargs='+', type=str, help='path to input files')
     args = parser.parse_args()
 
-    result = {frozenset(model) for model in g91.process(args.models, args.input_files)}
-    print(result)
+    for model in g91.process(args.models, args.input_files):
+        print(model)
 
 
 if __name__ == "__main__":

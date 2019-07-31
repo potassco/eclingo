@@ -71,9 +71,10 @@ def append_epistemic_constraints(epistemic_atoms, backend):
         backend.add_rule([], [epistemic_literal, atom_literal], False)
 
 
-def generate_show_directives(epistemic_atoms):
+def generate_projection_directives(epistemic_atoms):
     string = ''
     for atom in epistemic_atoms:
+        string = string + ('#project %s/%d.\n' % (atom.name, len(atom.arguments)))
         string = string + ('#show %s/%d.\n' % (atom.name, len(atom.arguments)))
 
     return string
@@ -89,27 +90,30 @@ def build_pi_aux(rules, symbolic_pi_atoms, theory_pi_atoms, backend):
             if symbolic_pi_atoms.get(term) is None:
                 epistemic_term = theory_pi_atoms.get(term)
                 aux = 'aux_'
+                positive = True
                 if epistemic_term.name == '~':
                     epistemic_term = epistemic_term.arguments[0]
                     aux = aux+'not_'
+                if epistemic_term.name == '-':
+                    epistemic_term = epistemic_term.arguments[0]
+                    aux = aux+'sn_'
+                    positive = False
                 epistemic_term = \
                     resolve_theory_term(epistemic_term, symbolic_pi_atoms, backend)
                 epistemic_symbol = clingo.Function(aux+epistemic_term.name,
                                                    epistemic_term.arguments)
                 epistemic_literal = backend.add_atom(epistemic_symbol)
-                symbol = clingo.Function(epistemic_term.name, epistemic_term.arguments)
+                symbol = clingo.Function(epistemic_term.name, epistemic_term.arguments, positive)
                 literal = backend.add_atom(symbol)
                 epistemic_atoms.update({epistemic_symbol: symbol})
                 symbolic_pi_atoms.update({epistemic_literal: epistemic_symbol, literal: symbol})
+                pi_aux.append(([epistemic_literal], [], True))
                 term = epistemic_literal
             if neg:
                 pi_aux_body.append(0-term)
             else:
                 pi_aux_body.append(term)
         pi_aux.append((head, pi_aux_body, choice))
-    for literal, symbol in symbolic_pi_atoms.items():
-        if symbol in epistemic_atoms.keys():
-            pi_aux.append(([literal], [], True))
 
     return pi_aux, epistemic_atoms
 
@@ -140,7 +144,7 @@ def process(models, input_files):
         load_program(pi_aux, symbolic_pi_atoms, backend)
         append_epistemic_constraints(epistemic_atoms, backend)
 
-    candidates_gen.add('base', [], generate_show_directives(epistemic_atoms))
+    candidates_gen.add('base', [], generate_projection_directives(epistemic_atoms))
     candidates_gen.ground([('base', [])])
     model_count = 0
     with candidates_gen.solve(yield_=True) as candidates_gen_handle:
@@ -163,23 +167,24 @@ def process(models, input_files):
             assumptions = [(atom, True) for atom in k_lits+k_not_lits] + \
                           [(atom, False) for atom in not_k_lits+not_k_not_lits]
             test = True
-            candidates_test.configuration.solve.enum_mode = 'cautious'
-            with candidates_test.solve(yield_=True, assumptions=assumptions) \
-                    as candidates_test_handle:
-                for cautious_model in candidates_test_handle:
-                    for epistemic in k_lits:
-                        atom = epistemic_atoms.get(epistemic)
-                        if atom not in cautious_model.symbols(atoms=True):
-                            test = False
-                            break
-                if test:
-                    for epistemic in not_k_lits:
-                        atom = epistemic_atoms.get(epistemic)
-                        if atom in cautious_model.symbols(atoms=True):
-                            test = False
-                            break
+            if k_lits+not_k_lits:
+                candidates_test.configuration.solve.enum_mode = 'cautious'
+                with candidates_test.solve(yield_=True, assumptions=assumptions) \
+                        as candidates_test_handle:
+                    for cautious_model in candidates_test_handle:
+                        for epistemic in k_lits:
+                            atom = epistemic_atoms.get(epistemic)
+                            if atom not in cautious_model.symbols(atoms=True):
+                                test = False
+                                break
+                    if test:
+                        for epistemic in not_k_lits:
+                            atom = epistemic_atoms.get(epistemic)
+                            if atom in cautious_model.symbols(atoms=True):
+                                test = False
+                                break
 
-            if test:
+            if test and (k_not_lits+not_k_not_lits):
                 candidates_test.configuration.solve.enum_mode = 'brave'
                 with candidates_test.solve(yield_=True, assumptions=assumptions) \
                         as candidates_test_handle:
@@ -200,5 +205,5 @@ def process(models, input_files):
                 model_count += 1
                 yield model.symbols(shown=True)
 
-            if (models != 0) and (model_count == models):
-                break
+                if model_count == models:
+                    break
