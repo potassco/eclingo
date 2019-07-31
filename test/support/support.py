@@ -8,14 +8,14 @@ def sort(result):
                 if 'sn_' in symbol:
                     symbol = symbol.replace('sn_', ' -')
                     if literal.arguments:
-                        not_sn_k.append(('%s(%s)' % (symbol, literal.arguments)) \
-                            .replace('[', '').replace(']', ''))
+                        not_sn_k.append(('%s(%s)' % (symbol, literal.arguments))
+                                        .replace('[', '').replace(']', ''))
                     else:
                         not_sn_k.append(symbol)
                 else:
                     if literal.arguments:
-                        not_k.append(('%s(%s)' % (symbol, literal.arguments)) \
-                            .replace('[', '').replace(']', ''))
+                        not_k.append(('%s(%s)' % (symbol, literal.arguments))
+                                     .replace('[', '').replace(']', ''))
                     else:
                         not_k.append(symbol)
             elif 'aux_' in literal.name:
@@ -23,14 +23,14 @@ def sort(result):
                 if 'sn_' in literal.name:
                     symbol = symbol.replace('sn_', ' -')
                     if literal.arguments:
-                        sn_k.append(('%s(%s)' % (symbol, literal.arguments)) \
-                            .replace('[', '').replace(']', ''))
+                        sn_k.append(('%s(%s)' % (symbol, literal.arguments))
+                                    .replace('[', '').replace(']', ''))
                     else:
                         sn_k.append(symbol)
                 else:
                     if literal.arguments:
-                        k.append(('%s(%s)' % (symbol, literal.arguments)) \
-                            .replace('[', '').replace(']', ''))
+                        k.append(('%s(%s)' % (symbol, literal.arguments))
+                                 .replace('[', '').replace(']', ''))
                     else:
                         k.append(symbol)
 
