@@ -1,151 +1,126 @@
 import clingo
 
-THEORY_PATH = 'asp/theory/theory.lp'
 
-
-class Observer:
-    def __init__(self):
-        self.rules = []
-
-    def rule(self, choice, head, body):
-        self.rules.append((head, body, choice))
-
-
-def check_neg(term):
-    neg = False
-    if term < 0:
-        term = abs(term)
-        neg = True
-
-    return term, neg
-
-
-def get_literal(term, read_dict, backend):
-    term, neg = check_neg(term)
-    symbol = read_dict.get(term)
-    literal = backend.add_atom(symbol)
-    if neg:
-        literal = (0-literal)
-
-    return literal
-
-
-def resolve_theory_term(term, dictionary, backend):
-    if term.type == clingo.TheoryTermType.Number:
-        symbol = clingo.Number(term.number)
-    else:
-        arguments = []
-        if term.arguments:
-            for term_argument in term.arguments:
-                argument = \
-                    resolve_theory_term(term_argument, dictionary, backend)
-                arguments.append(argument)
-        symbol = clingo.Function(term.name, arguments)
-        literal = backend.add_atom(symbol)
-        dictionary.update({literal: symbol})
-
-    return symbol
-
-
-def load_program(program, read_dict, backend):
-    for (head, body, choice) in program:
-        new_program_head = []
-        new_program_body = []
-        for term in head:
-            literal = \
-                get_literal(term, read_dict, backend)
-            new_program_head.append(literal)
-        for term in body:
-            literal = \
-                get_literal(term, read_dict, backend)
-            new_program_body.append(literal)
-        backend.add_rule(new_program_head, new_program_body, choice)
-
-
-def append_epistemic_constraints(epistemic_atoms, backend):
-    for epistemic, atom in epistemic_atoms.items():
-        epistemic_literal = backend.add_atom(epistemic)
-        atom_literal = backend.add_atom(atom)
-        if 'aux_not_' not in epistemic.name:
-            atom_literal = 0 - atom_literal
-        backend.add_rule([], [epistemic_literal, atom_literal], False)
-
-
-def generate_projection_directives(epistemic_atoms):
+def generate_projection_directives(k_signatures):
     string = ''
-    for atom in epistemic_atoms:
-        string = string + ('#project %s/%d.\n' % (atom.name, len(atom.arguments)))
-        string = string + ('#show %s/%d.\n' % (atom.name, len(atom.arguments)))
+    for (name, arity, _) in k_signatures:
+        string = string + ('#project %s/%d.\n' % (name, arity))
+        string = string + ('#show %s/%d.\n' % (name, arity))
 
     return string
 
 
-def build_pi_aux(rules, symbolic_pi_atoms, theory_pi_atoms, backend):
-    epistemic_atoms = {}
-    pi_aux = []
-    for (head, body, choice) in rules:
-        pi_aux_body = []
-        for term in body:
-            term, neg = check_neg(term)
-            if symbolic_pi_atoms.get(term) is None:
-                epistemic_term = theory_pi_atoms.get(term)
-                aux = 'aux_'
-                positive = True
-                if epistemic_term.name == '~':
-                    epistemic_term = epistemic_term.arguments[0]
-                    aux = aux+'not_'
-                if epistemic_term.name == '-':
-                    epistemic_term = epistemic_term.arguments[0]
-                    aux = aux+'sn_'
-                    positive = False
-                epistemic_term = \
-                    resolve_theory_term(epistemic_term, symbolic_pi_atoms, backend)
-                epistemic_symbol = clingo.Function(aux+epistemic_term.name,
-                                                   epistemic_term.arguments)
-                epistemic_literal = backend.add_atom(epistemic_symbol)
-                symbol = clingo.Function(epistemic_term.name, epistemic_term.arguments, positive)
-                literal = backend.add_atom(symbol)
-                epistemic_atoms.update({epistemic_symbol: symbol})
-                symbolic_pi_atoms.update({epistemic_literal: epistemic_symbol, literal: symbol})
-                pi_aux.append(([epistemic_literal], [], True))
-                term = epistemic_literal
-            if neg:
-                pi_aux_body.append(0-term)
-            else:
-                pi_aux_body.append(term)
-        pi_aux.append((head, pi_aux_body, choice))
+def add_grounding_rules(predicates, control_objects):
+    rules = []
+    external = '_atom_to_be_released'
 
-    return pi_aux, epistemic_atoms
+    for predicate in predicates:
+        epistemic_term = predicate.atom.term
+        term = epistemic_term.name.replace('aux_', '') \
+                                  .replace('not_', '').replace('sn_', '-')
+
+        if epistemic_term.arguments:
+            epistemic_arguments = []
+            epistemic_arguments_counter = len(epistemic_term.arguments)
+
+            for index in range(1, epistemic_arguments_counter+1):
+                epistemic_arguments.append(('X%d' % index))
+            epistemic_arguments = (', ').join(epistemic_arguments)
+            rules.append('%s(%s) :- %s(%s), %s.' %
+                         (epistemic_term.name, epistemic_arguments,
+                          term, epistemic_arguments, external))
+        else:
+            rules.append('%s :- %s, %s.' % (epistemic_term.name, term, external))
+
+    for control_object in control_objects:
+        control_object.add('base', [], '#external %s.' % external)
+        control_object.add('base', [], '\n'.join(rules))
+
+
+def preprocess(ast, control_objects, predicates):
+    if ast.type == clingo.ast.ASTType.Rule:
+        preprocessed_body = []
+        for body_literal in ast.body:
+            if body_literal.atom.type == clingo.ast.ASTType.TheoryAtom:
+                theory_term = body_literal.atom.elements[0].tuple[0]
+                theory_element = theory_term.elements[0]
+                symbol_name = 'aux_'
+                for operator in theory_element.operators:
+                    if operator == '~':
+                        symbol_name += 'not_'
+                    elif operator == '-':
+                        symbol_name += 'sn_'
+                if theory_element.term.type == clingo.ast.ASTType.Symbol:
+                    symbol_name += theory_element.term.symbol.name
+                    symbol_arguments = theory_element.term.symbol.arguments
+                elif theory_element.term.type == clingo.ast.ASTType.TheoryFunction:
+                    symbol_name += theory_element.term.name
+                    symbol_arguments = [symbol_argument.elements[0].term
+                                        for symbol_argument in theory_element.term.arguments]
+                body_literal = clingo.ast.Literal(body_literal.location, body_literal.sign,
+                                                  clingo.ast.SymbolicAtom(
+                                                      clingo.ast.Function(body_literal.location,
+                                                                          symbol_name,
+                                                                          symbol_arguments, False)))
+                preprocessed_body.append(body_literal)
+                predicates.append(body_literal)
+            else:
+                preprocessed_body.append(body_literal)
+
+        rule = clingo.ast.Rule(ast.location, ast.head, preprocessed_body)
+        for control_object in control_objects:
+            with control_object.builder() as builder:
+                builder.add(rule)
+    else:
+        for control_object in control_objects:
+            with control_object.builder() as builder:
+                builder.add(ast)
 
 
 def process(models, input_files):
-    parser = clingo.Control()
-    parser.load(THEORY_PATH)
-    for input_file in input_files:
-        parser.load(input_file)
-
-    observer = Observer()
-    parser.register_observer(observer, False)
-    parser.ground([('base', [])])
-
-    symbolic_pi_atoms = {x.literal: x.symbol for x in parser.symbolic_atoms}
-    theory_pi_atoms = {x.literal: x.elements[0].terms[0] for x in parser.theory_atoms}
-
-    with parser.backend() as backend:
-        (pi_aux, epistemic_atoms) = \
-            build_pi_aux(observer.rules, symbolic_pi_atoms, theory_pi_atoms, backend)
-
-    candidates_test = clingo.Control(['0'])
-    with candidates_test.backend() as backend:
-        load_program(pi_aux, symbolic_pi_atoms, backend)
-
     candidates_gen = clingo.Control(['0', '--project'])
-    with candidates_gen.backend() as backend:
-        load_program(pi_aux, symbolic_pi_atoms, backend)
-        append_epistemic_constraints(epistemic_atoms, backend)
+    candidates_test = clingo.Control(['0'])
 
-    candidates_gen.add('base', [], generate_projection_directives(epistemic_atoms))
+    predicates, epistemic_atoms = [], []
+    for input_file in input_files:
+        with open(input_file, 'r') as program:
+            clingo.parse_program(program.read(),
+                                 lambda ast: preprocess(ast, [candidates_gen, candidates_test],
+                                                        predicates))
+    add_grounding_rules(predicates, [candidates_gen, candidates_test])
+
     candidates_gen.ground([('base', [])])
+    candidates_test.ground([('base', [])])
+
+    k_signatures = [(name, arity, positive)
+                    for (name, arity, positive) in candidates_gen.symbolic_atoms.signatures
+                    if 'aux_' in name]
+
+    epistemic_symbols = []
+    for control_object in [candidates_gen, candidates_test]:
+        with control_object.backend() as backend:
+            for (name, arity, positive) in k_signatures:
+                for atom in candidates_gen.symbolic_atoms.by_signature(name, arity):
+                    epistemic_symbols.append(atom.symbol)
+                    backend.add_rule([atom.literal], [], True)
+
+        control_object.cleanup()
+
+    epistemic_atoms = {}
+    for symbol in epistemic_symbols:
+        name = symbol.name.replace('aux_', '')
+        positive = True
+        if 'sn_' in symbol.name:
+            name = name.replace('sn_', '')
+            positive = False
+        if 'not_' in symbol.name:
+            name = name.replace('not_', '')
+
+        epistemic_atoms.update({symbol: clingo.Function(name, symbol.arguments, positive)})
+
+    candidates_gen.add('projection', [], generate_projection_directives(k_signatures))
+    candidates_gen.ground([('projection', [])])
+
     model_count = 0
     with candidates_gen.solve(yield_=True) as candidates_gen_handle:
         for model in candidates_gen_handle:
