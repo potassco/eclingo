@@ -1,5 +1,7 @@
 import argparse
-import src.g91.g91 as g91
+from timeit import default_timer as timer
+import src.preprocesser.preprocesser as preprocesser
+import src.solver.solver as solver
 
 
 def main():
@@ -10,8 +12,15 @@ def main():
     parser.add_argument('input_files', nargs='+', type=str, help='path to input files')
     args = parser.parse_args()
 
-    for model in g91.process(args.models, args.input_files):
+    candidates_gen, candidates_test, epistemic_atoms = preprocesser.parse(args.input_files)
+
+    start = timer()
+
+    for model in solver.solve(candidates_gen, candidates_test, epistemic_atoms, args.models):
         print(model)
+
+    end = timer()
+    print('Elapsed time: %.6f' % (end - start))
 
 
 if __name__ == "__main__":
