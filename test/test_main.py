@@ -1,5 +1,5 @@
 import support.support as support
-import src.preprocesser.preprocesser as preprocesser
+import src.parser.parser as parser
 import src.solver.solver as solver
 
 INPUT_PROG_PATH = 'test/prog/input/'
@@ -13,7 +13,7 @@ OUTPUT_ELIGIBLE_PATH = 'test/eligible/output/'
 def test_prog():
     for i in range(1, 8):
         input_path = INPUT_PROG_PATH + ('prog%02d.lp' % i)
-        candidates_gen, candidates_test, epistemic_atoms = preprocesser.parse([input_path])
+        candidates_gen, candidates_test, epistemic_atoms = parser.parse([input_path])
         result = [model for model in
                   solver.solve(candidates_gen, candidates_test, epistemic_atoms, 0)]
         pretty_result = support.formalize(result)
@@ -27,7 +27,7 @@ def test_eligible():
     for i in range(1, 17):
         input_path = INPUT_ELIGIBLE_PATH + ('eligible%02d.lp' % i)
         candidates_gen, candidates_test, \
-            epistemic_atoms = preprocesser.parse([KB_ELIGIBLE_PATH, input_path])
+            epistemic_atoms = parser.parse([KB_ELIGIBLE_PATH, input_path])
         result = [model for model in
                   solver.solve(candidates_gen, candidates_test, epistemic_atoms, 0)]
         pretty_result = support.formalize(result)
