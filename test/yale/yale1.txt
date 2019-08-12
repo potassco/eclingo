@@ -1,0 +1,56 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%initial states%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+holds(alive,0).
+holds(loaded,0).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%problem description%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#const length=1.
+max(length).
+stepless(0..L-1) :- max(L).
+
+
+%%%%%%%  fluents   %%%%%%%%%
+fluent(loaded).
+fluent(alive).
+inertial(loaded).
+inertial(alive).
+
+%%%%%%%  actions   %%%%%%%%
+action(load).
+action(pull_trigger).
+
+%%%%%%  executable  %%%%%%% 
+executable(pull_trigger,T):-  stepless(T).
+executable(load,T) :- -holds(loaded,T),stepless(T).
+:- occurs(A,S), not executable(A,S).
+
+%%% non-concurrent actions
+%:- occurs(A,S), occurs(B,S), A!=B.
+
+%%%%%  effects   %%%%%%%
+
+-holds(alive,T+1):-occurs(pull_trigger,T),holds(loaded,T),stepless(T).
+-holds(loaded,T+1):-occurs(pull_trigger,T),stepless(T).
+holds(loaded,T+1):-occurs(load,T),stepless(T).
+
+%%%%% goal  %%%%%%%
+goal :- -holds(alive,LEN), max(LEN).
+
+%%%% initial state: fluents false by default
+-holds(F,0):-not  holds(F,0),fluent(F).
+
+%%%% intertia %%%%
+holds(F,S+1):-fluent(F),inertial(F), stepless(S),holds(F,S),not  -holds(F,S+1).
+-holds(F,S+1):-fluent(F),inertial(F), stepless(S),-holds(F,S),not  holds(F,S+1).
+
+%%%% epistemic %%%%%%%
+
+:- not &k{goal}.
+
+occurs(A,S) :- not &k{ -occurs(A,S) }, stepless(S), action(A).
+-occurs(A,S) :- not &k{ occurs(A,S) }, stepless(S), action(A).
+
