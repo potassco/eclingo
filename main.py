@@ -14,9 +14,9 @@ def main():
     argparser.add_argument('input_files', nargs='+', type=str, help='path to input files')
     args = argparser.parse_args()
 
-    candidates_gen, candidates_test, epistemic_atoms = parser.parse(args.input_files, args.k14)
-
     start = timer()
+
+    candidates_gen, candidates_test, epistemic_atoms = parser.parse(args.input_files, args.k14)
 
     for model in solver.solve(candidates_gen, candidates_test, epistemic_atoms, args.models):
         print([str(atom).replace('aux_', 'K{ ').replace('not_', '~ ').replace('sn_', '-')+' }'
