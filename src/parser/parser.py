@@ -37,32 +37,52 @@ def add_grounding_rules(predicates, control_objects):
         control_object.add('base', [], '\n'.join(rules))
 
 
-def preprocess(ast, control_objects, predicates):
+def preprocess(ast, control_objects, predicates, k14):
     if ast.type == clingo.ast.ASTType.Rule:
         preprocessed_body = []
         for body_literal in ast.body:
             if body_literal.atom.type == clingo.ast.ASTType.TheoryAtom:
                 theory_term = body_literal.atom.elements[0].tuple[0]
                 theory_element = theory_term.elements[0]
-                symbol_name = 'aux_'
+                aux_name = 'aux_'
                 for operator in theory_element.operators:
                     if operator == '~':
-                        symbol_name += 'not_'
+                        aux_name += 'not_'
                     elif operator == '-':
-                        symbol_name += 'sn_'
+                        aux_name += 'sn_'
                 if theory_element.term.type == clingo.ast.ASTType.Symbol:
-                    symbol_name += theory_element.term.symbol.name
+                    symbol_name = theory_element.term.symbol.name
                     symbol_arguments = theory_element.term.symbol.arguments
                 elif theory_element.term.type == clingo.ast.ASTType.TheoryFunction:
-                    symbol_name += theory_element.term.name
+                    symbol_name = theory_element.term.name
                     symbol_arguments = [symbol_argument.elements[0].term
                                         for symbol_argument in theory_element.term.arguments]
                 body_literal = clingo.ast.Literal(body_literal.location, body_literal.sign,
                                                   clingo.ast.SymbolicAtom(
                                                       clingo.ast.Function(body_literal.location,
-                                                                          symbol_name,
+                                                                          aux_name+symbol_name,
                                                                           symbol_arguments, False)))
                 preprocessed_body.append(body_literal)
+                if k14:
+                    if ('not_' not in aux_name) and (body_literal.sign != clingo.ast.Sign.Negation):
+                        if 'sn_' in aux_name:
+                            aux_body_literal = clingo.ast.Literal(
+                                body_literal.location, body_literal.sign,
+                                clingo.ast.SymbolicAtom(
+                                    clingo.ast.UnaryOperation(
+                                        body_literal.location,
+                                        clingo.ast.UnaryOperator.Minus,
+                                        clingo.ast.Function(body_literal.location,
+                                                            symbol_name,
+                                                            symbol_arguments, False))))
+                        else:
+                            aux_body_literal = clingo.ast.Literal(
+                                body_literal.location, body_literal.sign,
+                                clingo.ast.SymbolicAtom(
+                                    clingo.ast.Function(body_literal.location,
+                                                        symbol_name,
+                                                        symbol_arguments, False)))
+                        preprocessed_body.append(aux_body_literal)
                 predicates.append(body_literal)
             else:
                 preprocessed_body.append(body_literal)
@@ -77,7 +97,7 @@ def preprocess(ast, control_objects, predicates):
                 builder.add(ast)
 
 
-def parse(input_files):
+def parse(input_files, k14):
     candidates_gen = clingo.Control(['0', '--project'])
     candidates_test = clingo.Control(['0'])
 
@@ -86,7 +106,7 @@ def parse(input_files):
         with open(input_file, 'r') as program:
             clingo.parse_program(program.read(),
                                  lambda ast: preprocess(ast, [candidates_gen, candidates_test],
-                                                        predicates))
+                                                        predicates, k14))
     add_grounding_rules(predicates, [candidates_gen, candidates_test])
 
     candidates_gen.ground([('base', [])])
