@@ -116,27 +116,24 @@ def parse(input_files, k14):
                     for (name, arity, positive) in candidates_gen.symbolic_atoms.signatures
                     if 'aux_' in name]
 
-    epistemic_symbols = []
+    epistemic_atoms = {}
     for control_object in [candidates_gen, candidates_test]:
         with control_object.backend() as backend:
             for (name, arity, positive) in k_signatures:
                 for atom in candidates_gen.symbolic_atoms.by_signature(name, arity):
-                    epistemic_symbols.append(atom.symbol)
                     backend.add_rule([atom.literal], [], True)
 
+                    epistemic_symbol = atom.symbol
+                    name = epistemic_symbol.name.replace('aux_', '')
+                    positive = True
+                    if 'sn_' in epistemic_symbol.name:
+                        name = name.replace('sn_', '')
+                        positive = False
+                    if 'not_' in epistemic_symbol.name:
+                        name = name.replace('not_', '')
+                    epistemic_atoms.update({epistemic_symbol: clingo.Function(name, epistemic_symbol.arguments, positive)})
+
         control_object.cleanup()
-
-    epistemic_atoms = {}
-    for symbol in epistemic_symbols:
-        name = symbol.name.replace('aux_', '')
-        positive = True
-        if 'sn_' in symbol.name:
-            name = name.replace('sn_', '')
-            positive = False
-        if 'not_' in symbol.name:
-            name = name.replace('not_', '')
-
-        epistemic_atoms.update({symbol: clingo.Function(name, symbol.arguments, positive)})
 
     candidates_gen.add('projection', [], generate_projection_directives(k_signatures))
     candidates_gen.ground([('projection', [])])
