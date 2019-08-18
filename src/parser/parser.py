@@ -1,7 +1,7 @@
 import clingo
 
 
-def generate_projection_directives(k_signatures):
+def _generate_projection_directives(k_signatures):
     string = ''
     for (name, arity, _) in k_signatures:
         string = string + ('#project %s/%d.\n' % (name, arity))
@@ -10,7 +10,7 @@ def generate_projection_directives(k_signatures):
     return string
 
 
-def add_grounding_rules(predicates, control_objects):
+def _add_grounding_rules(predicates, control_objects):
     rules = []
     external = '_atom_to_be_released'
 
@@ -37,7 +37,7 @@ def add_grounding_rules(predicates, control_objects):
         control_object.add('base', [], '\n'.join(rules))
 
 
-def preprocess(ast, control_objects, predicates, k14):
+def _preprocess(ast, control_objects, predicates, k14):
     if ast.type == clingo.ast.ASTType.Rule:
         preprocessed_body = []
         for body_literal in ast.body:
@@ -105,9 +105,9 @@ def parse(input_files, k14):
     for input_file in input_files:
         with open(input_file, 'r') as program:
             clingo.parse_program(program.read(),
-                                 lambda ast: preprocess(ast, [candidates_gen, candidates_test],
-                                                        predicates, k14))
-    add_grounding_rules(predicates, [candidates_gen, candidates_test])
+                                 lambda ast: _preprocess(ast, [candidates_gen, candidates_test],
+                                                         predicates, k14))
+    _add_grounding_rules(predicates, [candidates_gen, candidates_test])
 
     candidates_gen.ground([('base', [])])
     candidates_test.ground([('base', [])])
@@ -131,11 +131,13 @@ def parse(input_files, k14):
                         positive = False
                     if 'not_' in epistemic_symbol.name:
                         name = name.replace('not_', '')
-                    epistemic_atoms.update({epistemic_symbol: clingo.Function(name, epistemic_symbol.arguments, positive)})
+                    epistemic_atoms.update(
+                        {epistemic_symbol: clingo.Function(name, epistemic_symbol.arguments,
+                                                           positive)})
 
         control_object.cleanup()
 
-    candidates_gen.add('projection', [], generate_projection_directives(k_signatures))
+    candidates_gen.add('projection', [], _generate_projection_directives(k_signatures))
     candidates_gen.ground([('projection', [])])
 
     return candidates_gen, candidates_test, epistemic_atoms
