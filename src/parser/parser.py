@@ -137,6 +137,13 @@ def parse(input_files, k14):
 
         control_object.cleanup()
 
+    with candidates_gen.backend() as backend:
+        for epistemic, atom in epistemic_atoms.items():
+            atom_lit = backend.add_atom(atom)
+            if 'not_' not in epistemic.name:
+                atom_lit = 0-atom_lit
+            backend.add_rule([], [backend.add_atom(epistemic), atom_lit], False)
+
     candidates_gen.add('projection', [], _generate_projection_directives(k_signatures))
     candidates_gen.ground([('projection', [])])
 
