@@ -57,12 +57,19 @@ def _preprocess(ast, control_objects, predicates, k14):
                     symbol_name = theory_element.term.name
                     symbol_arguments = [symbol_argument.elements[0].term
                                         for symbol_argument in theory_element.term.arguments]
-                body_literal = clingo.ast.Literal(body_literal.location, body_literal.sign,
+
+                sign = body_literal.sign
+                if (not k14) and (body_literal.sign == clingo.ast.Sign.NoSign):
+                    sign = clingo.ast.Sign.DoubleNegation
+
+                body_literal = clingo.ast.Literal(body_literal.location, sign,
                                                   clingo.ast.SymbolicAtom(
                                                       clingo.ast.Function(body_literal.location,
                                                                           aux_name+symbol_name,
                                                                           symbol_arguments, False)))
                 preprocessed_body.append(body_literal)
+                predicates.append(body_literal)
+
                 if k14:
                     if ('not_' not in aux_name) and (body_literal.sign != clingo.ast.Sign.Negation):
                         if 'sn_' in aux_name:
@@ -83,7 +90,6 @@ def _preprocess(ast, control_objects, predicates, k14):
                                                         symbol_name,
                                                         symbol_arguments, False)))
                         preprocessed_body.append(aux_body_literal)
-                predicates.append(body_literal)
             else:
                 preprocessed_body.append(body_literal)
 
