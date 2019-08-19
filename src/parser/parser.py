@@ -10,6 +10,14 @@ def _generate_projection_directives(k_signatures):
     return string
 
 
+def _add_const(constants, control_objects):
+    constants_string = ''
+    for const in constants:
+        constants_string += ('#const %s.' % const)
+    for control_object in control_objects:
+        control_object.add('base', [], constants_string)
+
+
 def _add_grounding_rules(predicates, control_objects):
     rules = []
     external = '_atom_to_be_released'
@@ -103,7 +111,7 @@ def _preprocess(ast, control_objects, predicates, k14):
                 builder.add(ast)
 
 
-def parse(input_files, k14):
+def parse(input_files, constants, k14):
     candidates_gen = clingo.Control(['0', '--project'])
     candidates_test = clingo.Control(['0'])
 
@@ -114,6 +122,9 @@ def parse(input_files, k14):
                                  lambda ast: _preprocess(ast, [candidates_gen, candidates_test],
                                                          predicates, k14))
     _add_grounding_rules(predicates, [candidates_gen, candidates_test])
+
+    if constants:
+        _add_const(constants, [candidates_gen, candidates_test])
 
     candidates_gen.ground([('base', [])])
     candidates_test.ground([('base', [])])

@@ -11,12 +11,15 @@ def main():
                            default=1)
     argparser.add_argument('-k', '--k14', action='store_true',
                            help='computes world views under K14 semantics')
+    argparser.add_argument('-c', '--const', action='append',
+                           help='adds a constant to the program (using \'<id>=<term>\' format)')
     argparser.add_argument('input_files', nargs='+', type=str, help='path to input files')
     args = argparser.parse_args()
 
     start = timer()
 
-    candidates_gen, candidates_test, epistemic_atoms = parser.parse(args.input_files, args.k14)
+    candidates_gen, candidates_test,\
+        epistemic_atoms = parser.parse(args.input_files, args.const, args.k14)
 
     for model in solver.solve(candidates_gen, candidates_test, epistemic_atoms, args.models):
         print([str(atom).replace('aux_', 'K{ ').replace('not_', '~ ').replace('sn_', '-')+' }'
