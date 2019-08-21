@@ -45,7 +45,7 @@ def _add_grounding_rules(predicates, control_objects):
         control_object.add('base', [], '\n'.join(rules))
 
 
-def _preprocess(ast, control_objects, predicates, k14):
+def _preprocess(ast, control_objects, predicates, show_signatures, k14):
     if ast.type == clingo.ast.ASTType.Rule:
         preprocessed_body = []
         for body_literal in ast.body:
@@ -102,13 +102,13 @@ def _preprocess(ast, control_objects, predicates, k14):
                 preprocessed_body.append(body_literal)
 
         rule = clingo.ast.Rule(ast.location, ast.head, preprocessed_body)
+
         for control_object in control_objects:
             with control_object.builder() as builder:
                 builder.add(rule)
-    else:
-        for control_object in control_objects:
-            with control_object.builder() as builder:
-                builder.add(ast)
+
+    elif ast.type == clingo.ast.ASTType.ShowSignature:
+        show_signatures.add((ast.name, ast.arity, ast.positive))
 
 
 def parse(input_files, constants, k14):
@@ -116,11 +116,12 @@ def parse(input_files, constants, k14):
     candidates_test = clingo.Control(['0'])
 
     predicates = []
+    show_signatures = set()
     for input_file in input_files:
         with open(input_file, 'r') as program:
             clingo.parse_program(program.read(),
                                  lambda ast: _preprocess(ast, [candidates_gen, candidates_test],
-                                                         predicates, k14))
+                                                         predicates, show_signatures, k14))
     _add_grounding_rules(predicates, [candidates_gen, candidates_test])
 
     if constants:
@@ -137,7 +138,7 @@ def parse(input_files, constants, k14):
     for control_object in [candidates_gen, candidates_test]:
         with control_object.backend() as backend:
             for (name, arity, positive) in k_signatures:
-                for atom in candidates_gen.symbolic_atoms.by_signature(name, arity):
+                for atom in candidates_gen.symbolic_atoms.by_signature(name, arity, positive):
                     backend.add_rule([atom.literal], [], True)
 
                     epistemic_symbol = atom.symbol
@@ -154,6 +155,9 @@ def parse(input_files, constants, k14):
 
         control_object.cleanup()
 
+    candidates_gen.add('projection', [], _generate_projection_directives(k_signatures))
+    candidates_gen.ground([('projection', [])])
+
     with candidates_gen.backend() as backend:
         for epistemic, atom in epistemic_atoms.items():
             atom_lit = backend.add_atom(atom)
@@ -161,7 +165,4 @@ def parse(input_files, constants, k14):
                 atom_lit = 0-atom_lit
             backend.add_rule([], [backend.add_atom(epistemic), atom_lit], False)
 
-    candidates_gen.add('projection', [], _generate_projection_directives(k_signatures))
-    candidates_gen.ground([('projection', [])])
-
-    return candidates_gen, candidates_test, epistemic_atoms
+    return candidates_gen, candidates_test, epistemic_atoms, show_signatures

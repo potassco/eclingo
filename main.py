@@ -18,12 +18,13 @@ def main():
 
     start = timer()
 
-    candidates_gen, candidates_test,\
-        epistemic_atoms = parser.parse(args.input_files, args.const, args.k14)
+    candidates_gen, candidates_test, \
+        epistemic_atoms, show_signatures = parser.parse(args.input_files, args.const, args.k14)
 
-    for model in solver.solve(candidates_gen, candidates_test, epistemic_atoms, args.models):
+    for model in solver.solve(candidates_gen, candidates_test,
+                              epistemic_atoms, show_signatures, args.models):
         print([str(atom).replace('aux_', 'K{ ').replace('not_', '~ ').replace('sn_', '-')+' }'
-               for atom in model])
+               for atom in model if 'aux_' in atom.name])
 
     end = timer()
     print('Elapsed time: %.6f' % (end - start))
