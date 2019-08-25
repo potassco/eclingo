@@ -29,7 +29,7 @@ def sort(result):
                         sn_k.append(symbol)
                 else:
                     if literal.arguments:
-                        arguments = [argument.name for argument in literal.arguments]
+                        arguments = [str(argument) for argument in literal.arguments]
                         k.append('%s(%s)' % (symbol, (', ').join(arguments)))
                     else:
                         k.append(symbol)

@@ -1,0 +1,6 @@
+[
+[occurs(aim,2), occurs(aim,6), occurs(cock,0), occurs(cock,4), occurs(fire,3), occurs(fire,7), occurs(load,1), occurs(load,5)],
+[occurs(aim,2), occurs(aim,6), occurs(cock,0), occurs(cock,5), occurs(fire,3), occurs(fire,7), occurs(load,1), occurs(load,4)],
+[occurs(aim,2), occurs(aim,6), occurs(cock,1), occurs(cock,4), occurs(fire,3), occurs(fire,7), occurs(load,0), occurs(load,5)],
+[occurs(aim,2), occurs(aim,6), occurs(cock,1), occurs(cock,5), occurs(fire,3), occurs(fire,7), occurs(load,0), occurs(load,4)]
+]
