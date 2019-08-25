@@ -111,7 +111,7 @@ def _preprocess(ast, control_objects, predicates, show_signatures, k14):
         show_signatures.add((ast.name, ast.arity, ast.positive))
 
 
-def parse(input_files, constants, k14):
+def parse(input_files, constants, k14, optimization):
     candidates_gen = clingo.Control(['0', '--project'])
     candidates_test = clingo.Control(['0'])
 
@@ -158,11 +158,12 @@ def parse(input_files, constants, k14):
     candidates_gen.add('projection', [], _generate_projection_directives(k_signatures))
     candidates_gen.ground([('projection', [])])
 
-    with candidates_gen.backend() as backend:
-        for epistemic, atom in epistemic_atoms.items():
-            atom_lit = backend.add_atom(atom)
-            if 'not_' not in epistemic.name:
-                atom_lit = 0-atom_lit
-            backend.add_rule([], [backend.add_atom(epistemic), atom_lit], False)
+    if optimization > 0:
+        with candidates_gen.backend() as backend:
+            for epistemic, atom in epistemic_atoms.items():
+                atom_lit = backend.add_atom(atom)
+                if 'not_' not in epistemic.name:
+                    atom_lit = 0-atom_lit
+                backend.add_rule([], [backend.add_atom(epistemic), atom_lit], False)
 
     return candidates_gen, candidates_test, epistemic_atoms, show_signatures
