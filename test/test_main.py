@@ -18,7 +18,7 @@ def test_prog_g91():
     for i in range(1, 8):
         input_path = INPUT_PROG_PATH + ('prog%02d.lp' % i)
         candidates_gen, candidates_test, \
-            epistemic_atoms, show_signatures = parser.parse([input_path], [], False)
+            epistemic_atoms, show_signatures = parser.parse([input_path], [], False, 1)
         result = [model for model in
                   solver.solve(candidates_gen, candidates_test,
                                epistemic_atoms, show_signatures, 0)]
@@ -33,7 +33,7 @@ def test_eligible_g91():
     for i in range(1, 17):
         input_path = INPUT_ELIGIBLE_PATH + ('eligible%02d.lp' % i)
         candidates_gen, candidates_test, epistemic_atoms, \
-            show_signatures = parser.parse([KB_ELIGIBLE_PATH, input_path], [], False)
+            show_signatures = parser.parse([KB_ELIGIBLE_PATH, input_path], [], False, 1)
         result = [model for model in
                   solver.solve(candidates_gen, candidates_test,
                                epistemic_atoms, show_signatures, 0)]
@@ -48,7 +48,7 @@ def test_prog_k14():
     for i in range(1, 8):
         input_path = INPUT_PROG_PATH + ('prog%02d.lp' % i)
         candidates_gen, candidates_test, \
-            epistemic_atoms, show_signatures = parser.parse([input_path], [], True)
+            epistemic_atoms, show_signatures = parser.parse([input_path], [], True, 1)
         result = [model for model in
                   solver.solve(candidates_gen, candidates_test,
                                epistemic_atoms, show_signatures, 0)]
@@ -63,7 +63,7 @@ def test_eligible_k14():
     for i in range(1, 17):
         input_path = INPUT_ELIGIBLE_PATH + ('eligible%02d.lp' % i)
         candidates_gen, candidates_test, epistemic_atoms, \
-            show_signatures = parser.parse([KB_ELIGIBLE_PATH, input_path], [], True)
+            show_signatures = parser.parse([KB_ELIGIBLE_PATH, input_path], [], True, 1)
         result = [model for model in
                   solver.solve(candidates_gen, candidates_test,
                                epistemic_atoms, show_signatures, 0)]
@@ -83,7 +83,7 @@ def test_yale():
             input_path = INPUT_YALE_PATH + ('yale%02d.lp' % i)
             candidates_gen, candidates_test, epistemic_atoms, \
                 show_signatures = parser.parse([KB_YALE_PATH, input_path],
-                                               ['length=%s' % length], False)
+                                               ['length=%s' % length], False, 1)
             result = [model for model in
                       solver.solve(candidates_gen, candidates_test,
                                    epistemic_atoms, show_signatures, 0)]
