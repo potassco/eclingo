@@ -12,7 +12,7 @@ def main():
     argparser.add_argument('-k', '--k14', action='store_true',
                            help='computes world views under K14 semantics')
     argparser.add_argument('-op', '--optimization', type=int,
-                           help='number of optimization to use',
+                           help='number of optimization to use (0 for no optimizations)',
                            default=1)
     argparser.add_argument('-c', '--const', action='append',
                            help='adds a constant to the program (using \'<id>=<term>\' format)')
