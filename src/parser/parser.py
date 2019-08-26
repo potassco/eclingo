@@ -36,12 +36,7 @@ def _add_grounding_rules(predicates, control_objects):
         for body_literal in positive_body:
             body_literal = body_literal.atom.term
             if body_literal.arguments:
-                body_literal_arguments = []
-                body_literal_arguments_counter = len(body_literal.arguments)
-
-                for index in range(1, body_literal_arguments_counter+1):
-                    body_literal_arguments.append(('X%d' % index))
-                body_literal_arguments = (', ').join(body_literal_arguments)
+                body_literal_arguments = (', ').join([str(argument) for argument in body_literal.arguments])
                 body.append('%s(%s)' % (body_literal.name, body_literal_arguments))
             else:
                 body.append(body_literal.name)
@@ -49,12 +44,7 @@ def _add_grounding_rules(predicates, control_objects):
         body_string = (', ').join(body)
 
         if epistemic_term.arguments:
-            epistemic_arguments = []
-            epistemic_arguments_counter = len(epistemic_term.arguments)
-
-            for index in range(1, epistemic_arguments_counter+1):
-                epistemic_arguments.append(('X%d' % index))
-            epistemic_arguments = (', ').join(epistemic_arguments)
+            epistemic_arguments = (', ').join([str(argument) for argument in epistemic_term.arguments])
             rules.append('%s(%s) :- %s%s(%s), %s.' %
                          (epistemic_term.name, epistemic_arguments,
                           negative, term, epistemic_arguments, body_string))
