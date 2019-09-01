@@ -22,23 +22,37 @@ def _add_grounding_rules(predicates, control_objects):
     rules = []
     external = '_atom_to_be_released'
 
-    for predicate in predicates:
+    for (predicate, positive_body) in predicates:
         epistemic_term = predicate.atom.term
-        term = epistemic_term.name.replace('aux_', '') \
-                                  .replace('not_', '').replace('sn_', '-')
+        term = epistemic_term.name.replace('aux_', '')
+        negative = ''
+        if 'not_' in term:
+            term = term.replace('not_', '')
+            negative = 'not '
+        if 'sn_' in term:
+            term = term.replace('sn_', '-')
+
+        body = []
+        for body_literal in positive_body:
+            body_literal = body_literal.atom.term
+            if body_literal.arguments:
+                body_literal_arguments = (', ').join([str(argument)
+                                                      for argument in body_literal.arguments])
+                body.append('%s(%s)' % (body_literal.name, body_literal_arguments))
+            else:
+                body.append(body_literal.name)
+        body.append(external)
+        body_string = (', ').join(body)
 
         if epistemic_term.arguments:
-            epistemic_arguments = []
-            epistemic_arguments_counter = len(epistemic_term.arguments)
-
-            for index in range(1, epistemic_arguments_counter+1):
-                epistemic_arguments.append(('X%d' % index))
-            epistemic_arguments = (', ').join(epistemic_arguments)
-            rules.append('%s(%s) :- %s(%s), %s.' %
+            epistemic_arguments = (', ').join([str(argument)
+                                               for argument in epistemic_term.arguments])
+            rules.append('%s(%s) :- %s%s(%s), %s.' %
                          (epistemic_term.name, epistemic_arguments,
-                          term, epistemic_arguments, external))
+                          negative, term, epistemic_arguments, body_string))
+
         else:
-            rules.append('%s :- %s, %s.' % (epistemic_term.name, term, external))
+            rules.append('%s :- %s%s, %s.' % (epistemic_term.name, negative, term, body_string))
 
     for control_object in control_objects:
         control_object.add('base', [], '#external %s.' % external)
@@ -76,7 +90,13 @@ def _preprocess(ast, control_objects, predicates, show_signatures, k14):
                                                                           aux_name+symbol_name,
                                                                           symbol_arguments, False)))
                 preprocessed_body.append(body_literal)
-                predicates.append(body_literal)
+
+                body_positive = []
+                if 'not_' in body_literal.atom.term.name:
+                    body_positive = [literal for literal in ast.body
+                                     if (literal.atom.type != clingo.ast.ASTType.TheoryAtom)
+                                     and (literal.sign != clingo.ast.Sign.Negation)]
+                predicates.append((body_literal, body_positive))
 
                 if k14:
                     if ('not_' not in aux_name) and (body_literal.sign != clingo.ast.Sign.Negation):
@@ -122,10 +142,9 @@ def parse(input_files, constants, k14, optimization):
             clingo.parse_program(program.read(),
                                  lambda ast: _preprocess(ast, [candidates_gen, candidates_test],
                                                          predicates, show_signatures, k14))
-    _add_grounding_rules(predicates, [candidates_gen, candidates_test])
-
     if constants:
         _add_const(constants, [candidates_gen, candidates_test])
+    _add_grounding_rules(predicates, [candidates_gen, candidates_test])
 
     candidates_gen.ground([('base', [])])
     candidates_test.ground([('base', [])])
