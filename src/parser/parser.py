@@ -90,11 +90,13 @@ def _preprocess(ast, control_objects, predicates, show_signatures, k14):
                                                                           aux_name+symbol_name,
                                                                           symbol_arguments, False)))
                 preprocessed_body.append(body_literal)
-                predicates.append((body_literal,
-                                   [literal for literal in ast.body
-                                    if (literal.atom.type != clingo.ast.ASTType.TheoryAtom)
-                                    and (literal.sign != clingo.ast.Sign.Negation)
-                                    and ('not_' in body_literal.atom.term.name)]))
+
+                body_positive = []
+                if 'not_' in body_literal.atom.term.name:
+                    body_positive = [literal for literal in ast.body
+                                     if (literal.atom.type != clingo.ast.ASTType.TheoryAtom)
+                                     and (literal.sign != clingo.ast.Sign.Negation)]
+                predicates.append((body_literal, body_positive))
 
                 if k14:
                     if ('not_' not in aux_name) and (body_literal.sign != clingo.ast.Sign.Negation):
@@ -140,10 +142,9 @@ def parse(input_files, constants, k14, optimization):
             clingo.parse_program(program.read(),
                                  lambda ast: _preprocess(ast, [candidates_gen, candidates_test],
                                                          predicates, show_signatures, k14))
-    _add_grounding_rules(predicates, [candidates_gen, candidates_test])
-
     if constants:
         _add_const(constants, [candidates_gen, candidates_test])
+    _add_grounding_rules(predicates, [candidates_gen, candidates_test])
 
     candidates_gen.ground([('base', [])])
     candidates_test.ground([('base', [])])
