@@ -25,12 +25,19 @@ def main():
         epistemic_atoms, show_signatures = parser.parse(args.input_files, args.const,
                                                         args.k14, args.optimization)
 
+    models = 0
     for model in solver.solve(candidates_gen, candidates_test,
                               epistemic_atoms, show_signatures, args.models):
-        print([str(atom).replace('aux_', 'K{ ').replace('not_', '~ ').replace('sn_', '-')+' }'
-               for atom in model if 'aux_' in atom.name])
+        models += 1
+        answer = ('\t').join(['&k{ '+str(atom)+' }' for atom in model if 'aux_' in atom.name])
+        answer = answer.replace('aux_', '').replace('not_', '~ ').replace('sn_', '-')
+        print('Answer: %s\n%s' % (models, answer))
 
     end = timer()
+    if models:
+        print('SATISFIABLE\n')
+    else:
+        print('UNSATISFIABLE\n')
     print('Elapsed time: %.6f' % (end - start))
 
 
