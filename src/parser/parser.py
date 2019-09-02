@@ -63,7 +63,8 @@ def _preprocess(ast, control_objects, predicates, show_signatures, k14):
     if ast.type == clingo.ast.ASTType.Rule:
         preprocessed_body = []
         for body_literal in ast.body:
-            if body_literal.atom.type == clingo.ast.ASTType.TheoryAtom:
+            if (body_literal.type == clingo.ast.ASTType.Literal) \
+                    and (body_literal.atom.type == clingo.ast.ASTType.TheoryAtom):
                 theory_term = body_literal.atom.elements[0].tuple[0]
                 theory_element = theory_term.elements[0]
                 aux_name = 'aux_'
