@@ -24,5 +24,5 @@ install:
 
 script:
 
-  - pylint -E main.py src/parser/parser.py src/solver/solver.py test/test_main.py test/support/support.py
+  - pylint -E eclingo.py src/parser/parser.py src/solver/solver.py test/test_main.py test/support/support.py
   - python3 -m pytest
