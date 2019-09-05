@@ -38,7 +38,7 @@ def main():
         print('SATISFIABLE\n')
     else:
         print('UNSATISFIABLE\n')
-    print('Elapsed time: %.6f' % (end - start))
+    print('Elapsed time: %.6f s' % (end - start))
 
 
 if __name__ == "__main__":
