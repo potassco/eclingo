@@ -1,0 +1,3 @@
+[
+[occurs(aim,2), occurs(aim,5), occurs(load,1), occurs(load,4), occurs(pull_trigger,0), occurs(pull_trigger,3), occurs(pull_trigger,6)]
+]
