@@ -1,1 +1,1 @@
-# epistemic-ASP
+# eclingo
