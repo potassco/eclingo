@@ -1,6 +1,7 @@
-import support.support as support
-import src.parser.parser as parser
-import src.solver.solver as solver
+from support import support
+from eclingo.parser import parser
+from eclingo.solver import solver
+
 
 INPUT_PROG_PATH = 'test/prog/input/'
 OUTPUT_PROG_PATH = 'test/prog/output/'
