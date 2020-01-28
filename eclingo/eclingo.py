@@ -1,18 +1,18 @@
 import sys
 import argparse
 from timeit import default_timer as timer
-from parser import parser
-from solver import solver
+import parser.parser as parser
+import solver.solver as solver
 
 
-ECLINGO_VERSION = '1.0.0'
+__version__ = '1.0.0'
 
 
 class Eclingo():
 
     def __init__(self):
         self.elapsed_time = None
-        self.version = ECLINGO_VERSION
+        self.version = __version__
         self.argparser = argparse.ArgumentParser(prog='eclingo')
         self._set_argparser_args()
 
