@@ -1,15 +1,7 @@
-import sys
-import os
-
-TEST_PATH = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, TEST_PATH + '/../eclingo')
-
-from eclingo import Eclingo
-from eclingo.parser import Parser
-from eclingo.solver import Solver
-from eclingo.parser import EclingoSemantics
-
-sys.path.insert(0, TEST_PATH)
+from eclingo.main import Eclingo
+from eclingo.parser.parser import Parser
+from eclingo.solver.solver import Solver
+from eclingo.parser.semantics import EclingoSemantics
 
 
 INPUT_PROG_PATH = 'test/prog/input/'
