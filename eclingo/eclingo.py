@@ -8,7 +8,7 @@ import solver.solver as solver
 __version__ = '1.0.0'
 
 
-class Eclingo():
+class Eclingo:
 
     def __init__(self):
         self.elapsed_time = None
@@ -18,15 +18,18 @@ class Eclingo():
 
     def _set_argparser_args(self):
         self.argparser.add_argument('-n', '--models', type=int,
-                                    help='maximum number of models to compute (0 computes all models)',
+                                    help='maximum number of models to compute ' +
+                                    '(0 computes all models)',
                                     default=1)
         self.argparser.add_argument('-k', '--k14', action='store_true',
                                     help='computes world views under K14 semantics')
         self.argparser.add_argument('-op', '--optimization', type=int,
-                                    help='number of optimization to use (0 for no optimizations)',
+                                    help='number of optimization to use ' +
+                                    '(0 for no optimizations)',
                                     default=1)
         self.argparser.add_argument('-c', '--const', action='append',
-                                    help='adds a constant to the program (using \'<id>=<term>\' format)')
+                                    help='adds a constant to the program ' +
+                                    '(using \'<id>=<term>\' format)')
         self.argparser.add_argument('input_files', nargs='+', type=str, help='path to input files')
 
     def print_version(self):
