@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
     start = timer()
 
-    eclingo_control = eclingo.Control(models=args.models,
+    eclingo_control = eclingo.Control(max_models=args.models,
                                       semantics=args.k14,
                                       optimization=args.optimization)
 
