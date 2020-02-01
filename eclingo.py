@@ -33,6 +33,7 @@ if __name__ == "__main__":
             eclingo_control.add_const(name, term)
 
     eclingo_control.parse()
+    print('Solving...')
     for model in eclingo_control.solve():
         print('Answer: {models}\n{model}'.format(models=eclingo_control.models, model=model))
 

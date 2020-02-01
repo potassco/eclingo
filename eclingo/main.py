@@ -19,7 +19,7 @@ class Control:
         self._candidates_gen = clingo.Control(['0', '--project'])
         self._candidates_test = clingo.Control(['0'])
         self._epistemic_atoms = {}
-        self._predicates = set()
+        self._predicates = []
         self._show_signatures = set()
 
     def add(self, program):
@@ -29,8 +29,8 @@ class Control:
             preprocessor = G91Preprocessor(self._candidates_gen, self._candidates_test)
 
         preprocessor.preprocess(program)
-        self._predicates = self._predicates | preprocessor.predicates
-        self._show_signatures = self._show_signatures | preprocessor.show_signatures
+        self._predicates.extend(preprocessor.predicates)
+        self._show_signatures.update(preprocessor.show_signatures)
 
         del preprocessor
 
