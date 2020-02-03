@@ -3,6 +3,7 @@ import clingo
 
 
 class Preprocessor(ABC):
+
     def __init__(self, candidates_gen, candidates_test):
         self._candidates_gen = candidates_gen
         self._candidates_test = candidates_test
@@ -38,8 +39,6 @@ class Preprocessor(ABC):
                 if 'not_' in body_literal.atom.term.name:
                     body_positive = self._get_body_positive(ast)
                 self.predicates.append((body_literal, body_positive))
-
-                preprocessed_body.extend(self._get_aux_body_literals(body_literal))
             else:
                 preprocessed_body.append(body_literal)
 
@@ -76,13 +75,9 @@ class Preprocessor(ABC):
             else literal.sign
 
     def _get_body_positive(self, ast):
-        body_positive = [literal for literal in ast.body
-                         if (literal.atom.type != clingo.ast.ASTType.TheoryAtom)
-                         and (literal.sign != clingo.ast.Sign.Negation)]
-        return body_positive
-
-    def _get_aux_body_literals(self, _body_literal):
-        return []
+        return [literal for literal in ast.body
+                if (literal.atom.type != clingo.ast.ASTType.TheoryAtom)
+                and (literal.sign != clingo.ast.Sign.Negation)]
 
 
 class G91Preprocessor(Preprocessor):
@@ -91,30 +86,50 @@ class G91Preprocessor(Preprocessor):
 
 class K14Preprocessor(Preprocessor):
 
+    def _preprocess_rule(self, ast):
+        preprocessed_body = []
+        for body_literal in ast.body:
+            if (body_literal.type == clingo.ast.ASTType.Literal) \
+                    and (body_literal.atom.type == clingo.ast.ASTType.TheoryAtom):
+
+                body_literal = self._get_preprocessed_literal(body_literal)
+                preprocessed_body.append(body_literal)
+
+                body_positive = []
+                if 'not_' in body_literal.atom.term.name:
+                    body_positive = self._get_body_positive(ast)
+                self.predicates.append((body_literal, body_positive))
+
+                if ('not_' not in body_literal.atom.term.name) and \
+                    (body_literal.sign != clingo.ast.Sign.Negation):
+                    preprocessed_body.append(self._get_aux_body_literal(body_literal))
+            else:
+                preprocessed_body.append(body_literal)
+
+        return clingo.ast.Rule(ast.location, ast.head, preprocessed_body)
+
     def _get_literal_sign(self, literal):
         return literal.sign
 
-    def _get_aux_body_literals(self, body_literal):
-        if ('not_' not in body_literal.atom.term.name) and \
-            (body_literal.sign != clingo.ast.Sign.Negation):
-            aux_body_literal_name = body_literal.atom.term.name.replace('aux_', '')
-            if 'sn_' in body_literal.atom.term.name:
-                aux_body_literal = clingo.ast.Literal(
-                    body_literal.location, body_literal.sign,
-                    clingo.ast.SymbolicAtom(
-                        clingo.ast.UnaryOperation(
-                            body_literal.location,
-                            clingo.ast.UnaryOperator.Minus,
-                            clingo.ast.Function(body_literal.location,
-                                                aux_body_literal_name.replace('sn_', ''),
-                                                body_literal.atom.term.arguments,
-                                                False))))
-            else:
-                aux_body_literal = clingo.ast.Literal(
-                    body_literal.location, body_literal.sign,
-                    clingo.ast.SymbolicAtom(
+    def _get_aux_body_literal(self, body_literal):
+        aux_body_literal_name = body_literal.atom.term.name.replace('aux_', '')
+        if 'sn_' in body_literal.atom.term.name:
+            aux_body_literal = clingo.ast.Literal(
+                body_literal.location, body_literal.sign,
+                clingo.ast.SymbolicAtom(
+                    clingo.ast.UnaryOperation(
+                        body_literal.location,
+                        clingo.ast.UnaryOperator.Minus,
                         clingo.ast.Function(body_literal.location,
-                                            aux_body_literal_name,
+                                            aux_body_literal_name.replace('sn_', ''),
                                             body_literal.atom.term.arguments,
-                                            False)))
-            return [aux_body_literal]
+                                            False))))
+        else:
+            aux_body_literal = clingo.ast.Literal(
+                body_literal.location, body_literal.sign,
+                clingo.ast.SymbolicAtom(
+                    clingo.ast.Function(body_literal.location,
+                                        aux_body_literal_name,
+                                        body_literal.atom.term.arguments,
+                                        False)))
+        return aux_body_literal

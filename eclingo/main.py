@@ -55,9 +55,9 @@ class Control:
                         self._epistemic_atoms, self.max_models)
         postprocessor = Postprocessor(self._candidates_test, self._show_signatures)
 
-        for model in solver.solve():
+        for model, assumptions in solver.solve():
             self.models += 1
-            yield postprocessor.postprocess(model)
+            yield postprocessor.postprocess(model, assumptions)
 
         del solver
         del postprocessor
