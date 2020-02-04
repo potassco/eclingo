@@ -73,7 +73,8 @@ class Parser:
         with self._candidates_gen.backend() as gen_backend, \
             self._candidates_test.backend() as test_backend:
             for (name, arity, positive) in self.k_signatures:
-                for atom in self._candidates_gen.symbolic_atoms.by_signature(name, arity, positive):
+                for atom in self._candidates_gen.symbolic_atoms \
+                    .by_signature(name, arity, positive):
                     gen_backend.add_rule([atom.literal], [], True)
                     test_backend.add_rule([atom.literal], [], True)
 
