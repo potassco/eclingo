@@ -4,6 +4,9 @@ language: python
 python: 
   - "3.6"
 
+os:
+  - linux
+
 before_install:
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
   - chmod +x miniconda.sh
@@ -15,7 +18,7 @@ before_install:
 
 install:
   - conda env create -f environment.yml
-  - source activate test
+  - conda activate test
 
 script:
   - pylint -E eclingo.py eclingo/main.py eclingo/preprocessor/preprocessor.py eclingo/parser/parser.py eclingo/solver/solver.py eclingo/postprocessor/postprocessor.py test/test_main.py
