@@ -1,3 +1,3 @@
 [
-[occurs(load,0), occurs(load,2), occurs(pull_trigger,1), occurs(pull_trigger,3)]
+[&k{occurs(load,0)}, &k{occurs(load,2)}, &k{occurs(pull_trigger,1)}, &k{occurs(pull_trigger,3)}]
 ]

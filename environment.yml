@@ -1,0 +1,11 @@
+name: test
+
+channels:
+  - anaconda
+  - potassco
+
+dependencies:
+  - python=3.6
+  - pylint
+  - pytest
+  - clingo
