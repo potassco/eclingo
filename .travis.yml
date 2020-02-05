@@ -15,11 +15,11 @@ before_install:
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
-  - python3 -m pip install -e .
 
 install:
   - conda env create -f environment.yml
   - conda activate test
+  - python3 -m pip install -e .
 
 script:
   - pylint -E eclingo/__main__.py eclingo/main.py eclingo/preprocessor/preprocessor.py eclingo/parser/parser.py eclingo/solver/solver.py eclingo/postprocessor/postprocessor.py test/test_main.py
