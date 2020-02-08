@@ -21,9 +21,9 @@ class Preprocessor(ABC):
                 with control_object.builder() as builder:
                     builder.add(rule)
             if self._optimization > 1 and ast.head.type == clingo.ast.ASTType.Literal:
-                aux_rule = self._get_aux_rule(ast, rule)
+                aux2_rule = self._get_aux2_rule(ast, rule)
                 with self._candidates_gen.builder() as builder:
-                    builder.add(aux_rule)
+                    builder.add(aux2_rule)
 
         elif ast.type == clingo.ast.ASTType.ShowSignature:
             self.show_signatures.add((ast.name, ast.arity, ast.positive))
@@ -86,16 +86,16 @@ class Preprocessor(ABC):
                 if (literal.atom.type != clingo.ast.ASTType.TheoryAtom)
                 and (literal.sign != clingo.ast.Sign.Negation)]
 
-    def _get_aux_rule(self, ast, rule):
+    def _get_aux2_rule(self, ast, rule):
         if ast.head.atom.type == clingo.ast.ASTType.BooleanConstant:
-            aux_head = ast.head
+            aux2_head = ast.head
         else:
-            aux_head = self._get_aux_literal(ast.head)
-        aux_body = [self._get_aux_literal(body_literal)
-                        for body_literal in rule.body]
-        return clingo.ast.Rule(ast.location, aux_head, aux_body)
+            aux2_head = self._get_aux2_literal(ast.head)
+        aux2_body = [self._get_aux2_literal(body_literal)
+                     for body_literal in rule.body]
+        return clingo.ast.Rule(ast.location, aux2_head, aux2_body)
 
-    def _get_aux_literal(self, literal):
+    def _get_aux2_literal(self, literal):
         if literal.type != clingo.ast.ASTType.SymbolicAtom:
             return literal
 
