@@ -4,9 +4,10 @@ import clingo
 
 class Preprocessor(ABC):
 
-    def __init__(self, candidates_gen, candidates_test):
+    def __init__(self, candidates_gen, candidates_test, optimization):
         self._candidates_gen = candidates_gen
         self._candidates_test = candidates_test
+        self._optimization = optimization
         self.predicates = []
         self.show_signatures = set()
 
@@ -19,8 +20,14 @@ class Preprocessor(ABC):
             for control_object in [self._candidates_gen, self._candidates_test]:
                 with control_object.builder() as builder:
                     builder.add(rule)
+            if self._optimization > 1 and ast.head.type == clingo.ast.ASTType.Literal:
+                aux_rule = self._get_aux_rule(ast, rule)
+                with self._candidates_gen.builder() as builder:
+                    builder.add(aux_rule)
+
         elif ast.type == clingo.ast.ASTType.ShowSignature:
             self.show_signatures.add((ast.name, ast.arity, ast.positive))
+
         elif ast.type == clingo.ast.ASTType.Definition:
             for control_object in [self._candidates_gen, self._candidates_test]:
                 with control_object.builder() as builder:
@@ -78,6 +85,41 @@ class Preprocessor(ABC):
         return [literal for literal in ast.body
                 if (literal.atom.type != clingo.ast.ASTType.TheoryAtom)
                 and (literal.sign != clingo.ast.Sign.Negation)]
+
+    def _get_aux_rule(self, ast, rule):
+        if ast.head.atom.type == clingo.ast.ASTType.BooleanConstant:
+            aux_head = ast.head
+        else:
+            aux_head = self._get_aux_literal(ast.head)
+        aux_body = [self._get_aux_literal(body_literal)
+                        for body_literal in rule.body]
+        return clingo.ast.Rule(ast.location, aux_head, aux_body)
+
+    def _get_aux_literal(self, literal):
+        if literal.type != clingo.ast.ASTType.SymbolicAtom:
+            return literal
+
+        aux_name = 'aux2_'
+        if literal.sign == clingo.ast.Sign.Negation:
+            aux_name += 'not_'
+        if literal.atom.term.type == clingo.ast.ASTType.UnaryOperation:
+            name = literal.atom.term.argument.name
+            arguments = literal.atom.term.argument.arguments
+            aux_name += 'sn_'
+        elif literal.atom.term.type == clingo.ast.ASTType.Function:
+            name = literal.atom.term.name
+            arguments = literal.atom.term.arguments
+        else:
+            return literal
+
+        if 'aux_' in name:
+            return literal
+
+        return clingo.ast.Literal(literal.location, clingo.ast.Sign.NoSign,
+                                clingo.ast.SymbolicAtom(
+                                    clingo.ast.Function(literal.location,
+                                                        aux_name+name,
+                                                        arguments, False)))
 
 
 class G91Preprocessor(Preprocessor):

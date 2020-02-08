@@ -6,7 +6,7 @@ from eclingo.postprocessor.postprocessor import Postprocessor
 
 
 __version__ = '1.0.0'
-__optimization__ = 1
+__optimization__ = 2
 
 
 class Control:
@@ -24,9 +24,11 @@ class Control:
 
     def add(self, program):
         if self.semantics:
-            preprocessor = K14Preprocessor(self._candidates_gen, self._candidates_test)
+            preprocessor = K14Preprocessor(self._candidates_gen, self._candidates_test,
+                                           self.optimization)
         else:
-            preprocessor = G91Preprocessor(self._candidates_gen, self._candidates_test)
+            preprocessor = G91Preprocessor(self._candidates_gen, self._candidates_test,
+                                           self.optimization)
 
         preprocessor.preprocess(program)
         self._predicates.extend(preprocessor.predicates)
