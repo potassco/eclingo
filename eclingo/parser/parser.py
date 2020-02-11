@@ -113,7 +113,7 @@ class Parser:
                 if 'not_' not in epistemic.name:
                     atom_lit = 0-atom_lit
                 backend.add_rule([], [backend.add_atom(epistemic), atom_lit], False)
-    
+
     def _calculate_wfm(self):
         observer = FactsObserver()
         self._candidates_gen.register_observer(observer, False)
