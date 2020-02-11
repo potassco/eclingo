@@ -1,27 +1,27 @@
 class FactsObserver:
     def __init__(self):
-        self.facts = set()
-        self.found_atoms = set()
-        self.found_heads = set()
+        self._facts = set()
+        self._found_atoms = set()
+        self._found_heads = set()
 
     def get_facts(self):
-        return self.facts
+        return self._facts
 
     def reset_facts(self):
-        self.facts = set()
+        self._facts = set()
 
     def get_irrelevants(self):
-        return {atom for atom in self.found_atoms if atom not in self.found_heads}
+        return {atom for atom in self._found_atoms if atom not in self._found_heads}
 
     def reset_irrelevants(self):
-        self.found_atoms = set()
-        self.found_heads = set()
+        self._found_atoms = set()
+        self._found_heads = set()
 
     def rule(self, choice, head, body):
         for atom in head:
-            self.found_heads.add(atom)
-            self.found_atoms.add(atom)
+            self._found_heads.add(atom)
+            self._found_atoms.add(atom)
         for atom in body:
-            self.found_atoms.add(atom)
+            self._found_atoms.add(atom)
         if (len(head) == 1) and not body and not choice:
-            self.facts.add(head[0])
+            self._facts.add(head[0])
