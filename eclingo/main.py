@@ -11,7 +11,7 @@ __optimization__ = 1
 
 class Control:
 
-    def __init__(self, max_models, semantics, optimization):
+    def __init__(self, max_models = 1, semantics = False, optimization = __optimization__):
         self.models = 0
         self.max_models = max_models
         self.semantics = semantics
