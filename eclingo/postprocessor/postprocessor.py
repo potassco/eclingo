@@ -25,8 +25,8 @@ class Postprocessor:
             symbols = [Symbol(atom.name.replace('aux_', '').replace('sn_', '').replace('not_', ''),
                               atom.arguments, True, EpistemicSign.StrongNegation  \
                                 if 'sn_' in atom.name else EpistemicSign.Negation  \
-                                    if 'not_' in atom.name else EpistemicSign.NoSign) 
-                                    for atom in model]
+                                    if 'not_' in atom.name else EpistemicSign.NoSign)
+                       for atom in model]
         return Model(symbols)
 
 
