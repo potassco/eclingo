@@ -1,4 +1,5 @@
 import clingo
+from eclingo.parser.observer import FactsObserver
 
 class Parser:
 
@@ -13,7 +14,10 @@ class Parser:
     def parse(self):
         self._add_grounding_rules()
 
-        self._candidates_gen.ground([('base', [])])
+        if self._optimization > 2:
+            self._calculate_wfm()
+        else:
+            self._candidates_gen.ground([('base', [])])
         self._candidates_test.ground([('base', [])])
 
         self.k_signatures.update({(literal.atom.term.name, len(literal.atom.term.arguments), True)
@@ -109,3 +113,41 @@ class Parser:
                 if 'not_' not in epistemic.name:
                     atom_lit = 0-atom_lit
                 backend.add_rule([], [backend.add_atom(epistemic), atom_lit], False)
+    
+    def _calculate_wfm(self):
+        observer = FactsObserver()
+        self._candidates_gen.register_observer(observer, False)
+        visited = []
+        test = True
+        while test:
+            self._candidates_gen.ground([('base', [])])
+
+            found = []
+            facts = observer.get_facts()
+            irrelevants = observer.get_irrelevants()
+            symbolic_atoms = {atom.literal: str(atom.symbol)
+                              for atom in self._candidates_gen.symbolic_atoms}
+            for fact in facts:
+                symbol = symbolic_atoms.get(fact)
+                if symbol and symbol not in visited:
+                    aux_atom = 'aux_'
+                    aux_atom += symbol.replace('-', 'sn_')
+                    found.append("%s." % aux_atom)
+                    visited.append(symbol)
+                    visited.append(aux_atom)
+            for irrelevant in irrelevants:
+                symbol = symbolic_atoms.get(irrelevant)
+                if symbol and symbol not in visited:
+                    aux_atom = 'aux_not'
+                    aux_atom += symbol.replace('-', 'sn_')
+                    found.append("%s." % aux_atom)
+                    visited.append(symbol)
+                    visited.append(aux_atom)
+
+            if found:
+                self._candidates_gen.add('base', [], "%s" % ("\n").join(found))
+                observer.reset_facts()
+                observer.reset_irrelevants()
+            else:
+                test = False
+                del observer
