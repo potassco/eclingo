@@ -58,7 +58,7 @@ class Preprocessor(ABC):
             symbol_arguments = theory_element.term.symbol.arguments
         elif theory_element.term.type == clingo.ast.ASTType.TheoryFunction:
             symbol_name = theory_element.term.name
-            symbol_arguments = [symbol_argument.elements[0].term
+            symbol_arguments = [self._get_theory_function_argument(symbol_argument)
                                 for symbol_argument in theory_element.term.arguments]
 
         sign = self._get_literal_sign(literal)
@@ -78,6 +78,16 @@ class Preprocessor(ABC):
         return [literal for literal in ast.body
                 if (literal.atom.type != clingo.ast.ASTType.TheoryAtom)
                 and (literal.sign != clingo.ast.Sign.Negation)]
+
+    def _get_theory_function_argument(self, argument):
+        argument = argument.elements[0].term
+        if argument.type == clingo.ast.ASTType.TheoryFunction:
+            return clingo.ast.Function(argument.location,
+                                       argument.name,
+                                       [self._get_theory_function_argument(arg)
+                                        for arg in argument.arguments], False)
+        else:
+            return argument
 
 
 class G91Preprocessor(Preprocessor):
