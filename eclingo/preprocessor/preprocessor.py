@@ -86,8 +86,7 @@ class Preprocessor(ABC):
                                        argument.name,
                                        [self._get_theory_function_argument(arg)
                                         for arg in argument.arguments], False)
-        else:
-            return argument
+        return argument
 
 
 class G91Preprocessor(Preprocessor):
