@@ -14,10 +14,10 @@ holds(F,S+1) :- inertial(F), stepless(S), holds(F,S),not  -holds(F,S+1).
 -holds(F,0):-not  holds(F,0),fluent(F).
 
 %%%%% goal  %%%%%%%
-goal :- -holds(alive,length).
+goal :- -holds(alive,length), not imposs.
 
 %%%% epistemic %%%%%%%
-:- occurs(A,S), not &k{executable(A,S)}.
+imposs :- occurs(A,S), not executable(A,S).
 :- not &k{goal}.
 
 occurs(A,S) :- not &k{ ~ occurs(A,S) }, stepless(S), action(A).
