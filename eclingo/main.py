@@ -6,7 +6,7 @@ from eclingo.postprocessor.postprocessor import Postprocessor
 
 
 __version__ = '1.0.0'
-__optimization__ = 2
+__optimization__ = 3
 
 
 class Control:
