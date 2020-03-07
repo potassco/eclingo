@@ -18,7 +18,7 @@ before_install:
 
 install:
   - conda env create -f environment.yml
-  - conda activate test
+  - conda activate eclingo
   - python3 -m pip install -e .
 
 script:
