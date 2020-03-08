@@ -52,8 +52,7 @@ class Parser:
                 if body_literal.arguments:
                     body_literal_arguments = (', ').join([str(argument)
                                                           for argument in body_literal.arguments])
-                    body.append('{name}({arguments})'.format(name=body_literal.name,
-                                                             arguments=body_literal_arguments))
+                    body.append(f'{body_literal.name}({body_literal_arguments})')
                 else:
                     body.append(body_literal.name)
             body.append(external)
@@ -62,16 +61,13 @@ class Parser:
             if epistemic_term.arguments:
                 epistemic_arguments = (', ').join([str(argument)
                                                    for argument in epistemic_term.arguments])
-                rules.append('{ep_term}({ep_args}) :- {negative}{term}({ep_args}), {body}.'
-                             .format(ep_term=epistemic_term.name, ep_args=epistemic_arguments,
-                                     negative=negative, term=term, body=body_string))
+                rules.append(f'{epistemic_term.name}({epistemic_arguments}) \
+                    :- {negative}{term}({epistemic_arguments}), {body_string}.')
             else:
-                rules.append('{epistemic_term} :- {negative}{term}, {body}.'
-                             .format(epistemic_term=epistemic_term.name, negative=negative,
-                                     term=term, body=body_string))
+                rules.append(f'{epistemic_term.name} :- {negative}{term}, {body_string}.')
 
         for control_object in [self._candidates_gen, self._candidates_test]:
-            control_object.add('base', [], '#external {}.'.format(external))
+            control_object.add('base', [], f'#external {external}.')
             control_object.add('base', [], '\n'.join(rules))
 
     def _add_choice_rules(self):
@@ -102,8 +98,8 @@ class Parser:
     def _add_projection_directives(self):
         projection_directives = ''
         for (name, arity, _) in self.k_signatures:
-            projection_directives += '#project {name}/{arity}.\n'.format(name=name, arity=arity)
-            projection_directives += '#show {name}/{arity}.\n'.format(name=name, arity=arity)
+            projection_directives += f'#project {name}/{arity}.\n'
+            projection_directives += f'#show {name}/{arity}.\n'
         self._candidates_gen.add('projection', [], projection_directives)
         self._candidates_gen.ground([('projection', [])])
 

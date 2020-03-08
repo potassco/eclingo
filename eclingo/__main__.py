@@ -4,7 +4,7 @@ import eclingo.main as eclingo
 
 
 def main():
-    print('eclingo version {}'.format(eclingo.__version__))
+    print(f'eclingo version {eclingo.__version__}')
 
     argparser = argparse.ArgumentParser(prog='eclingo')
     argparser.add_argument('-n', '--models', type=int,
@@ -36,7 +36,7 @@ def main():
     eclingo_control.parse()
     print('Solving...')
     for model in eclingo_control.solve():
-        print('Answer: {models}\n{model}'.format(models=eclingo_control.models, model=model))
+        print(f'Answer: {eclingo_control.models}\n{model}')
 
     end = timer()
 

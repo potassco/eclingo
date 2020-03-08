@@ -58,8 +58,7 @@ class Symbol:
         arguments = '({})'.format(', '.join([str(argument) for argument in self.arguments])) \
             if self.arguments else ''
 
-        return "{sign}&k{{ {ep_sign}{name}{args} }}"\
-            .format(sign=self.sign, ep_sign=self.epistemic_sign, name=self.name, args=arguments)
+        return f'{self.sign}&k{{ {self.epistemic_sign}{self.name}{arguments} }}'
 
     def __eq__(self, other):
         return self.name == other.name and self.arguments == other.arguments \

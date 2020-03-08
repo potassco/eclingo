@@ -37,7 +37,7 @@ class Control:
         del preprocessor
 
     def add_const(self, name, value):
-        self.add('#const {name}={value}.'.format(name=name, value=value))
+        self.add(f'#const {name}={value}.')
 
     def load(self, input_path):
         with open(input_path, 'r') as program:
