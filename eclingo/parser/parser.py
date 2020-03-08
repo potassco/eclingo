@@ -1,5 +1,6 @@
 import clingo
-from eclingo.parser.observer import FactsObserver
+from eclingo.parser.observer import WFMObserver
+
 
 class Parser:
 
@@ -61,13 +62,13 @@ class Parser:
             if epistemic_term.arguments:
                 epistemic_arguments = (', ').join([str(argument)
                                                    for argument in epistemic_term.arguments])
-                rules.append('{ep_term}({ep_args}) :- {negative}{term}({ep_args}), {body}.' \
-                    .format(ep_term=epistemic_term.name, ep_args=epistemic_arguments,
-                            negative=negative, term=term, body=body_string))
+                rules.append('{ep_term}({ep_args}) :- {negative}{term}({ep_args}), {body}.'
+                             .format(ep_term=epistemic_term.name, ep_args=epistemic_arguments,
+                                     negative=negative, term=term, body=body_string))
             else:
-                rules.append('{epistemic_term} :- {negative}{term}, {body}.' \
-                    .format(epistemic_term=epistemic_term.name, negative=negative,
-                            term=term, body=body_string))
+                rules.append('{epistemic_term} :- {negative}{term}, {body}.'
+                             .format(epistemic_term=epistemic_term.name, negative=negative,
+                                     term=term, body=body_string))
 
         for control_object in [self._candidates_gen, self._candidates_test]:
             control_object.add('base', [], '#external {}.'.format(external))
@@ -75,10 +76,10 @@ class Parser:
 
     def _add_choice_rules(self):
         with self._candidates_gen.backend() as gen_backend, \
-            self._candidates_test.backend() as test_backend:
+                self._candidates_test.backend() as test_backend:
             for (name, arity, positive) in self.k_signatures:
                 for atom in self._candidates_gen.symbolic_atoms \
-                    .by_signature(name, arity, positive):
+                        .by_signature(name, arity, positive):
                     gen_backend.add_rule([atom.literal], [], True)
                     test_backend.add_rule([atom.literal], [], True)
 
@@ -115,7 +116,7 @@ class Parser:
                 backend.add_rule([], [backend.add_atom(epistemic), atom_lit], False)
 
     def _calculate_wfm(self):
-        observer = FactsObserver()
+        observer = WFMObserver()
         self._candidates_gen.register_observer(observer, False)
         visited = []
         test = True

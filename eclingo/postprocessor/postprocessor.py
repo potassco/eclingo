@@ -19,13 +19,14 @@ class Postprocessor:
                 k_atoms = [atom for atom in show_atoms
                            if atom in cautious_model.symbols(atoms=True)]
 
-            symbols = [Symbol(atom.name, atom.arguments, True, EpistemicSign.NoSign  \
-                if atom.positive else EpistemicSign.StrongNegation) for atom in k_atoms]
+            symbols = [Symbol(atom.name, atom.arguments, True, EpistemicSign.NoSign
+                              if atom.positive else EpistemicSign.StrongNegation)
+                       for atom in k_atoms]
         else:
             symbols = [Symbol(atom.name.replace('aux_', '').replace('sn_', '').replace('not_', ''),
-                              atom.arguments, True, EpistemicSign.StrongNegation  \
-                                if 'sn_' in atom.name else EpistemicSign.Negation  \
-                                    if 'not_' in atom.name else EpistemicSign.NoSign)
+                              atom.arguments, True, EpistemicSign.StrongNegation
+                              if 'sn_' in atom.name else EpistemicSign.Negation
+                              if 'not_' in atom.name else EpistemicSign.NoSign)
                        for atom in model]
         return Model(symbols)
 

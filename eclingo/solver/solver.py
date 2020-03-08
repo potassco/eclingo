@@ -26,7 +26,7 @@ class Solver:
                         else:
                             not_k_lits.add(epistemic)
                 assumptions = [(atom, True) for atom in k_lits | k_not_lits] + \
-                            [(atom, False) for atom in not_k_lits | not_k_not_lits]
+                              [(atom, False) for atom in not_k_lits | not_k_not_lits]
                 test = True
                 if k_lits | not_k_lits:
                     self._candidates_test.configuration.solve.enum_mode = 'cautious'

@@ -28,6 +28,7 @@ def test_prog_g91():
             sol = sol.replace('\n', '').replace(' ', '')
         assert result == sol
 
+
 def test_prog_k14():
     for i in range(1, 8):
         eclingo_control = eclingo.Control(max_models=0,
@@ -42,6 +43,7 @@ def test_prog_k14():
             sol = output_prog.read()
             sol = sol.replace('\n', '').replace(' ', '')
         assert result == sol
+
 
 def test_eligible_g91():
     for i in range(1, 17):
@@ -59,6 +61,7 @@ def test_eligible_g91():
             sol = sol.replace('\n', '').replace(' ', '')
         assert result == sol
 
+
 def test_eligible_k14():
     for i in range(1, 17):
         eclingo_control = eclingo.Control(max_models=0,
@@ -74,6 +77,7 @@ def test_eligible_k14():
             sol = output_prog.read()
             sol = sol.replace('\n', '').replace(' ', '')
         assert result == sol
+
 
 def test_yale_g91():
     for i in range(1, 9):

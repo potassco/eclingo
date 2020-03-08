@@ -22,5 +22,5 @@ install:
   - python3 -m pip install -e .
 
 script:
-  - pylint -E eclingo/__main__.py eclingo/main.py eclingo/preprocessor/preprocessor.py eclingo/parser/parser.py eclingo/solver/solver.py eclingo/postprocessor/postprocessor.py test/test_main.py
+  - pylama
   - python3 -m pytest --durations=5 -vv

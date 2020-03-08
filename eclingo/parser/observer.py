@@ -1,4 +1,5 @@
-class FactsObserver:
+class WFMObserver:
+
     def __init__(self):
         self._facts = set()
         self._found_atoms = set()

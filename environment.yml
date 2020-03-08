@@ -2,10 +2,12 @@ name: eclingo
 
 channels:
   - anaconda
+  - conda-forge
   - potassco
 
 dependencies:
   - python=3.6
   - pylint
+  - pylama
   - pytest
   - clingo

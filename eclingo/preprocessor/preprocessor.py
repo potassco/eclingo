@@ -125,7 +125,7 @@ class Preprocessor(ABC):
             return literal
 
         return clingo.ast.Literal(literal.location, clingo.ast.Sign.NoSign,
-                                clingo.ast.SymbolicAtom(
+                                  clingo.ast.SymbolicAtom(
                                     clingo.ast.Function(literal.location,
                                                         aux_name+name,
                                                         arguments, False)))
@@ -152,7 +152,7 @@ class K14Preprocessor(Preprocessor):
                 self.predicates.append((body_literal, body_positive))
 
                 if ('not_' not in body_literal.atom.term.name) and \
-                    (body_literal.sign != clingo.ast.Sign.Negation):
+                        (body_literal.sign != clingo.ast.Sign.Negation):
                     preprocessed_body.append(self._get_aux_body_literal(body_literal))
             else:
                 preprocessed_body.append(body_literal)
