@@ -40,10 +40,7 @@ def main():
 
     end = timer()
 
-    if eclingo_control.models:
-        print('SATISFIABLE\n')
-    else:
-        print('UNSATISFIABLE\n')
+    print('SATISFIABLE\n') if eclingo_control.models else print('UNSATISFIABLE\n')
 
     print('Elapsed time: {:.6f} s'.format(end - start))
 
