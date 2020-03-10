@@ -1,5 +1,5 @@
 import argparse
-from timeit import default_timer as timer
+from time import perf_counter as timer
 import eclingo.main as eclingo
 
 
