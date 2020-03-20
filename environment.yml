@@ -10,4 +10,4 @@ dependencies:
   - pylint
   - pylama
   - pytest
-  - clingo
+  - clingo=5.4.0
