@@ -3,6 +3,7 @@ from eclingo.preprocessor.preprocessor import G91Preprocessor, K14Preprocessor
 from eclingo.parser.parser import Parser
 from eclingo.solver.solver import Solver
 from eclingo.postprocessor.postprocessor import Postprocessor
+from eclingo.utils.logger import logger, silent_logger
 
 
 __version__ = '1.0.0'
@@ -16,8 +17,8 @@ class Control:
         self.max_models = max_models
         self.semantics = semantics
         self.optimization = optimization
-        self._candidates_gen = clingo.Control(['0', '--project'])
-        self._candidates_test = clingo.Control(['0'])
+        self._candidates_gen = clingo.Control(['0', '--project'], logger=logger)
+        self._candidates_test = clingo.Control(['0'], logger=silent_logger)
         self._epistemic_atoms = {}
         self._predicates = []
         self._show_signatures = set()
