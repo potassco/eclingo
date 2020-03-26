@@ -81,18 +81,14 @@ def test_eligible_k14():
 
 def test_yale_g91():
     for i in range(1, 9):
-        if i != 7:
-            length = i
-            if i == 6:
-                length += 1
-
+        if i != 6:
             eclingo_control = eclingo.Control(max_models=0,
                                               semantics=False,
                                               optimization=eclingo.__optimization__)
             input_path = INPUT_YALE_PATH + 'yale{:02d}.lp'.format(i)
             eclingo_control.load(KB_YALE_PATH)
             eclingo_control.load(input_path)
-            eclingo_control.add_const('length', str(length))
+            eclingo_control.add_const('length', str(i))
             eclingo_control.parse()
             result = [sorted(model.symbols) for model in eclingo_control.solve()]
             result = str(sorted(result)).replace(' ', '')
