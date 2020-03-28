@@ -60,7 +60,8 @@ class Preprocessor(ABC):
                 aux_name += 'not_'
             elif operator == '-':
                 aux_name += 'sn_'
-        if theory_element.term.type == clingo.ast.ASTType.Symbol:
+        if (theory_element.term.type == clingo.ast.ASTType.Symbol) \
+                and (theory_element.term.symbol.name):
             symbol_name = theory_element.term.symbol.name
             symbol_arguments = theory_element.term.symbol.arguments
         elif theory_element.term.type == clingo.ast.ASTType.TheoryFunction:
