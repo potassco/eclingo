@@ -55,7 +55,7 @@ class Symbol:
         self.epistemic_sign = epistemic_sign
 
     def __repr__(self):
-        arguments = '({})'.format(', '.join([str(argument) for argument in self.arguments])) \
+        arguments = f'({", ".join([str(argument) for argument in self.arguments])})' \
             if self.arguments else ''
 
         return f'{self.sign}&k{{ {self.epistemic_sign}{self.name}{arguments} }}'

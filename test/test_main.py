@@ -18,12 +18,12 @@ def test_prog_g91():
         eclingo_control = eclingo.Control(max_models=0,
                                           semantics=False,
                                           optimization=eclingo.__optimization__)
-        input_path = INPUT_PROG_PATH + 'prog{:02d}.lp'.format(i)
+        input_path = INPUT_PROG_PATH + f'prog{i:02d}.lp'
         eclingo_control.load(input_path)
         eclingo_control.parse()
         result = [sorted(model.symbols) for model in eclingo_control.solve()]
         result = str(sorted(result)).replace(' ', '')
-        with open(OUTPUT_PROG_PATH + 'sol{:02d}.txt'.format(i), 'r') as output_prog:
+        with open(OUTPUT_PROG_PATH + f'sol{i:02d}.txt', 'r') as output_prog:
             sol = output_prog.read()
             sol = sol.replace('\n', '').replace(' ', '')
         assert result == sol
@@ -34,12 +34,12 @@ def test_prog_k14():
         eclingo_control = eclingo.Control(max_models=0,
                                           semantics=True,
                                           optimization=eclingo.__optimization__)
-        input_path = INPUT_PROG_PATH + 'prog{:02d}.lp'.format(i)
+        input_path = INPUT_PROG_PATH + f'prog{i:02d}.lp'
         eclingo_control.load(input_path)
         eclingo_control.parse()
         result = [sorted(model.symbols) for model in eclingo_control.solve()]
         result = str(sorted(result)).replace(' ', '')
-        with open(OUTPUT_PROG_PATH + 'sol{:02d}.txt'.format(i), 'r') as output_prog:
+        with open(OUTPUT_PROG_PATH + f'k14_sol{i:02d}.txt', 'r') as output_prog:
             sol = output_prog.read()
             sol = sol.replace('\n', '').replace(' ', '')
         assert result == sol
@@ -50,13 +50,13 @@ def test_eligible_g91():
         eclingo_control = eclingo.Control(max_models=0,
                                           semantics=False,
                                           optimization=eclingo.__optimization__)
-        input_path = INPUT_ELIGIBLE_PATH + 'eligible{:02d}.lp'.format(i)
+        input_path = INPUT_ELIGIBLE_PATH + f'eligible{i:02d}.lp'
         eclingo_control.load(KB_ELIGIBLE_PATH)
         eclingo_control.load(input_path)
         eclingo_control.parse()
         result = [sorted(model.symbols) for model in eclingo_control.solve()]
         result = str(sorted(result)).replace(' ', '')
-        with open(OUTPUT_ELIGIBLE_PATH + 'sol_eligible{:02d}.txt'.format(i), 'r') as output_prog:
+        with open(OUTPUT_ELIGIBLE_PATH + f'sol_eligible{i:02d}.txt', 'r') as output_prog:
             sol = output_prog.read()
             sol = sol.replace('\n', '').replace(' ', '')
         assert result == sol
@@ -67,13 +67,13 @@ def test_eligible_k14():
         eclingo_control = eclingo.Control(max_models=0,
                                           semantics=True,
                                           optimization=eclingo.__optimization__)
-        input_path = INPUT_ELIGIBLE_PATH + 'eligible{:02d}.lp'.format(i)
+        input_path = INPUT_ELIGIBLE_PATH + f'eligible{i:02d}.lp'
         eclingo_control.load(KB_ELIGIBLE_PATH)
         eclingo_control.load(input_path)
         eclingo_control.parse()
         result = [sorted(model.symbols) for model in eclingo_control.solve()]
         result = str(sorted(result)).replace(' ', '')
-        with open(OUTPUT_ELIGIBLE_PATH + 'sol_eligible{:02d}.txt'.format(i), 'r') as output_prog:
+        with open(OUTPUT_ELIGIBLE_PATH + f'sol_eligible{i:02d}.txt', 'r') as output_prog:
             sol = output_prog.read()
             sol = sol.replace('\n', '').replace(' ', '')
         assert result == sol
@@ -85,14 +85,14 @@ def test_yale_g91():
             eclingo_control = eclingo.Control(max_models=0,
                                               semantics=False,
                                               optimization=eclingo.__optimization__)
-            input_path = INPUT_YALE_PATH + 'yale{:02d}.lp'.format(i)
+            input_path = INPUT_YALE_PATH + f'yale{i:02d}.lp'
             eclingo_control.load(KB_YALE_PATH)
             eclingo_control.load(input_path)
             eclingo_control.add_const('length', str(i))
             eclingo_control.parse()
             result = [sorted(model.symbols) for model in eclingo_control.solve()]
             result = str(sorted(result)).replace(' ', '')
-            with open(OUTPUT_YALE_PATH + 'sol_yale{:02d}.txt'.format(i), 'r') as output_prog:
+            with open(OUTPUT_YALE_PATH + f'sol_yale{i:02d}.txt', 'r') as output_prog:
                 sol = output_prog.read()
                 sol = sol.replace('\n', '').replace(' ', '')
             assert result == sol

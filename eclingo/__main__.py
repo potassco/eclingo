@@ -42,7 +42,7 @@ def main():
 
     print('SATISFIABLE\n') if eclingo_control.models else print('UNSATISFIABLE\n')
 
-    print('Elapsed time: {:.6f} s'.format(end - start))
+    print(f'Elapsed time: {(end-start):.6f} s')
 
 
 if __name__ == "__main__":
