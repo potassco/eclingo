@@ -29,7 +29,7 @@ def test_prog_g91():
         assert result == sol
 
 
-def test_prog_k14():
+def test_prog_k15():
     for i in range(1, 8):
         eclingo_control = eclingo.Control(max_models=0,
                                           semantics=True,
@@ -39,7 +39,7 @@ def test_prog_k14():
         eclingo_control.parse()
         result = [sorted(model.symbols) for model in eclingo_control.solve()]
         result = str(sorted(result)).replace(' ', '')
-        with open(OUTPUT_PROG_PATH + f'k14_sol{i:02d}.txt', 'r') as output_prog:
+        with open(OUTPUT_PROG_PATH + f'k15_sol{i:02d}.txt', 'r') as output_prog:
             sol = output_prog.read()
             sol = sol.replace('\n', '').replace(' ', '')
         assert result == sol
@@ -62,7 +62,7 @@ def test_eligible_g91():
         assert result == sol
 
 
-def test_eligible_k14():
+def test_eligible_k15():
     for i in range(1, 17):
         eclingo_control = eclingo.Control(max_models=0,
                                           semantics=True,

@@ -136,7 +136,7 @@ class G91Preprocessor(Preprocessor):
     pass
 
 
-class K14Preprocessor(Preprocessor):
+class K15Preprocessor(Preprocessor):
 
     def _preprocess_rule(self, ast):
         preprocessed_body = []

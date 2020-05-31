@@ -10,8 +10,8 @@ def main():
     argparser.add_argument('-n', '--models', type=int,
                            help='maximum number of models to compute (0 computes all models)',
                            default=1)
-    argparser.add_argument('-k', '--k14', action='store_true',
-                           help='computes world views under K14 semantics')
+    argparser.add_argument('-k', '--k15', action='store_true',
+                           help='computes world views under K15 semantics')
     argparser.add_argument('-op', '--optimization', type=int,
                            help='number of optimization to use (0 for no optimizations)',
                            default=eclingo.__optimization__)
@@ -23,7 +23,7 @@ def main():
     start = timer()
 
     eclingo_control = eclingo.Control(max_models=args.models,
-                                      semantics=args.k14,
+                                      semantics=args.k15,
                                       optimization=args.optimization)
 
     for file_path in args.input_files:

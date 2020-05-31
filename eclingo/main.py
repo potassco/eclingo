@@ -1,5 +1,5 @@
 import clingo
-from eclingo.preprocessor.preprocessor import G91Preprocessor, K14Preprocessor
+from eclingo.preprocessor.preprocessor import G91Preprocessor, K15Preprocessor
 from eclingo.parser.parser import Parser
 from eclingo.solver.solver import Solver
 from eclingo.postprocessor.postprocessor import Postprocessor
@@ -25,7 +25,7 @@ class Control:
 
     def add(self, program):
         if self.semantics:
-            preprocessor = K14Preprocessor(self._candidates_gen, self._candidates_test,
+            preprocessor = K15Preprocessor(self._candidates_gen, self._candidates_test,
                                            self.optimization)
         else:
             preprocessor = G91Preprocessor(self._candidates_gen, self._candidates_test,

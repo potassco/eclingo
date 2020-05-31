@@ -32,13 +32,14 @@ class Solver:
                     self._candidates_test.configuration.solve.enum_mode = 'cautious'
                     with self._candidates_test.solve(yield_=True, assumptions=assumptions) \
                             as candidates_test_handle:
+                        cautious_model = None
                         for cautious_model in candidates_test_handle:
                             for epistemic in k_lits:
                                 atom = self._epistemic_atoms.get(epistemic)
                                 if atom not in cautious_model.symbols(atoms=True):
                                     test = False
                                     break
-                        if test:
+                        if test and cautious_model:
                             for epistemic in not_k_lits:
                                 atom = self._epistemic_atoms.get(epistemic)
                                 if atom in cautious_model.symbols(atoms=True):
@@ -49,13 +50,14 @@ class Solver:
                     self._candidates_test.configuration.solve.enum_mode = 'brave'
                     with self._candidates_test.solve(yield_=True, assumptions=assumptions) \
                             as candidates_test_handle:
+                        brave_model = None
                         for brave_model in candidates_test_handle:
                             for epistemic in k_not_lits:
                                 atom = self._epistemic_atoms.get(epistemic)
                                 if atom in brave_model.symbols(atoms=True):
                                     test = False
                                     break
-                        if test:
+                        if test and brave_model:
                             for epistemic in not_k_not_lits:
                                 atom = self._epistemic_atoms.get(epistemic)
                                 if atom not in brave_model.symbols(atoms=True):
