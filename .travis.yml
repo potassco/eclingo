@@ -19,7 +19,7 @@ before_install:
 install:
   - conda env create -f environment.yml
   - conda activate eclingo
-  - python3 -m pip install -e .
+  - python3 -m pip install .
 
 script:
   - pylama

@@ -9,7 +9,7 @@ with open('README.md', mode='r', encoding='utf-8') as f:
 setup(
     name='eclingo',
     version=__version__,
-    description='An epistemic logic programs solver.',
+    description='A solver for epistemic logic programs.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Javier Garea',
@@ -33,7 +33,14 @@ setup(
         'Topic :: Scientific/Engineering :: Artificial Intelligence'
     ],
     python_requires='>=3.6',
-    packages=['eclingo'],
+    packages=[
+        'eclingo',
+        'eclingo.preprocessor',
+        'eclingo.parser',
+        'eclingo.solver',
+        'eclingo.postprocessor',
+        'eclingo.utils'
+    ],
     entry_points={
         'console_scripts': ['eclingo=eclingo.__main__:main']
     },
