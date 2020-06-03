@@ -296,7 +296,7 @@ nholds_loaded_10 :- occurs_fire_9.
 nholds_wounded_0 :- not holds_wounded_0.
 holds_wounded_0 :- not nholds_wounded_0.
 holds_loaded_0 :- not nholds_loaded_0.
-nholds_loaded_0 :- not nholds_loaded_0.
+nholds_loaded_0 :- not holds_loaded_0.
 nholds_loaded_0 :- not holds_loaded_0.
 nholds_wounded_0 :- not holds_wounded_0.
 nholds_loaded_1 :- nholds_loaded_0, not holds_loaded_1.

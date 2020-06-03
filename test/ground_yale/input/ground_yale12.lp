@@ -297,7 +297,7 @@ nholds_wounded_0 :- not holds_wounded_0.
 holds_wounded_0 :- not nholds_wounded_0.
 holds_loaded_0 :- not nholds_loaded_0.
 nholds_alive_0 :- not holds_alive_0.
-nholds_loaded_0 :- not nholds_loaded_0.
+nholds_loaded_0 :- not holds_loaded_0.
 nholds_aimed_0 :- not holds_aimed_0.
 nholds_loaded_0 :- not holds_loaded_0.
 nholds_alive_0 :- not holds_alive_0.
