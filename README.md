@@ -69,7 +69,7 @@ optional arguments:
 
 #### Rules
 
-`eclingo` accepts rules with the same structure as `clingo` does. Additionally, `eclingo` allows these rules to include subjective literals in their body. These subjective literals are represented using the modal operator **K**, which is represented as `&k{}`. The expression inside the curly braces can be a explicit literal (that is, an atom `A` or its explicit negation `-A`) possibly preceeded by default negation, that is represented inside the braces as `~`.
+`eclingo` accepts rules with the same structure as `clingo` does. Additionally, `eclingo` allows these rules to include subjective literals in their body. These subjective literals are represented using the modal operator **K**, which is represented as `&k{}`. The expression inside the curly braces can be an explicit literal (that is, an atom `A` or its explicit negation `-A`) possibly preceded by default negation, that is represented inside the braces as `~`.
 
 > Modal operator **M** is not directly supported but `M A` can be replaced by the construction `not &k{ ~ A}`.
 
@@ -105,7 +105,7 @@ For example, to declare the constant `length` with value `2`, the following stat
 This repo contains a set of example scenarios inside the `test` folder.
 
 - The `prog` folder, includes some basic programs.
-- The `eligible` folder, includes the knowledge base and a set of 25 instances of the *Scolarship Elegibility Problem*.
+- The `eligible` folder, includes the knowledge base and a set of 25 instances of the *Scholarship Eligibility Problem*.
 - The `yale` folder, includes the knowledge base and a set of 13 instances of the *Yale Shooting Problem*.
 - The `paths` folder, includes the knowledge base and a set of 5 instances of a custom search problem that involves directed graphs.
 
