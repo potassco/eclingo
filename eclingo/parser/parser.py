@@ -16,7 +16,7 @@ class Parser:
         self._add_grounding_rules()
 
         if self._optimization > 2:
-            self._calculate_wfm()
+            self._approximate_wfm()
         else:
             self._candidates_gen.ground([('base', [])])
         self._candidates_test.ground([('base', [])])
@@ -111,7 +111,7 @@ class Parser:
                     atom_lit = 0-atom_lit
                 backend.add_rule([], [backend.add_atom(epistemic), atom_lit], False)
 
-    def _calculate_wfm(self):
+    def _approximate_wfm(self):
         observer = WFMObserver()
         self._candidates_gen.register_observer(observer, False)
         visited = []
@@ -119,32 +119,37 @@ class Parser:
         while test:
             self._candidates_gen.ground([('base', [])])
 
-            found = []
-            facts = observer.get_facts()
-            irrelevants = observer.get_irrelevants()
+            externals = {atom.literal for atom in self._candidates_gen.symbolic_atoms
+                         if atom.is_external}
             symbolic_atoms = {atom.literal: str(atom.symbol)
                               for atom in self._candidates_gen.symbolic_atoms}
+            affected_atoms = {symbol.replace('aux_', '').replace('not_', '').replace('sn_', '-')
+                              for symbol in symbolic_atoms.values()
+                              if 'aux_' in symbol}
+
+            facts = {symbolic_atoms.get(fact) for fact in observer.get_facts()}
+            heads = {symbolic_atoms.get(head) for head in observer.get_heads(externals)}
+
+            found = []
             for fact in facts:
-                symbol = symbolic_atoms.get(fact)
-                if symbol and symbol not in visited:
+                if fact not in visited:
                     aux_atom = 'aux_'
-                    aux_atom += symbol.replace('-', 'sn_')
-                    found.append("%s." % aux_atom)
-                    visited.append(symbol)
+                    aux_atom += fact.replace('-', 'sn_')
+                    found.append(f'{aux_atom}.')
+                    visited.append(fact)
                     visited.append(aux_atom)
-            for irrelevant in irrelevants:
-                symbol = symbolic_atoms.get(irrelevant)
-                if symbol and symbol not in visited:
-                    aux_atom = 'aux_not'
-                    aux_atom += symbol.replace('-', 'sn_')
-                    found.append("%s." % aux_atom)
-                    visited.append(symbol)
+            for atom in affected_atoms:
+                if atom not in visited and atom not in heads:
+                    aux_atom = 'aux_not_'
+                    aux_atom += atom.replace('-', 'sn_')
+                    found.append(f'{aux_atom}.')
+                    visited.append(atom)
                     visited.append(aux_atom)
 
             if found:
                 self._candidates_gen.add('base', [], "%s" % ("\n").join(found))
                 observer.reset_facts()
-                observer.reset_irrelevants()
+                observer.reset_heads()
             else:
                 test = False
                 del observer
