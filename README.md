@@ -12,7 +12,7 @@
 `eclingo` is a solver for epistemic logic programs built upon the ASP system [`clingo`](https://github.com/potassco/clingo).  
 Currently, `eclingo` can compute world views under the following semantics:
 - Gelfond 1991 (G91) [[1]](#references)
-- Kahl 2015 (K15) [[2]](#references)
+- Kahl et al. 2015 (K15) [[2]](#references)
 
 ## Dependencies
 
@@ -106,7 +106,8 @@ This repo contains a set of example scenarios inside the `test` folder.
 
 - The `prog` folder, includes some basic programs.
 - The `eligible` folder, includes the knowledge base and a set of 25 instances of the *Scholarship Eligibility Problem*.
-- The `yale` folder, includes the knowledge base and a set of 13 instances of the *Yale Shooting Problem*.
+- The `yale` folder, includes the knowledge base and a set of 12 instances of the *Yale Shooting Problem*.
+- The `ground_yale` folder, includes a set of 12 instances of a ground version of the *Yale Shooting Problem*.
 - The `paths` folder, includes the knowledge base and a set of 5 instances of a custom search problem that involves directed graphs.
 
 
@@ -166,6 +167,6 @@ Elapsed time: 0.058982 s
 
 ## References
 
-[1] M. Gelfond. Strong introspection. pages 386–391. AAAI Press / The MIT Press, 1991.
+[1] Gelfond, M.: Strong introspection. In: Dean, T.L., McKeown, K. (eds.) Proceedings of the AAAI Conference. vol. 1, pp. 386–391. AAAI Press/The MIT Press (1991)
 
-[2] P. Kahl, R. Watson, E. Balai, M. Gelfond, and Y. Zhang. The language of epistemic specifications (refined) including a prototype solver. Journal of Logic and Computation, 2015.
+[2] Kahl, P., Watson, R., Balai, E., Gelfond, M., Zhang, Y.: The language of epistemic specifications (refined) including a prototype solver. Journal of Logic and Computation (2015)
