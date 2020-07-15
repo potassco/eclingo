@@ -1,5 +1,5 @@
 import clingo
-from eclingo.preprocessor.preprocessor import G91Preprocessor, K15Preprocessor
+from eclingo.preprocessor.preprocessor import G94Preprocessor, K15Preprocessor
 from eclingo.parser.parser import Parser
 from eclingo.solver.solver import Solver
 from eclingo.postprocessor.postprocessor import Postprocessor
@@ -17,8 +17,8 @@ class Control:
         self.max_models = max_models
         self.semantics = semantics
         self.optimization = optimization
-        self._candidates_gen = clingo.Control(['0', '--project'], logger=logger)
-        self._candidates_test = clingo.Control(['0'], logger=silent_logger)
+        self._candidates_gen = clingo.Control(['0', '--project'], logger=silent_logger)
+        self._candidates_test = clingo.Control(['0'], logger=logger)
         self._epistemic_atoms = {}
         self._predicates = []
         self._show_signatures = set()
@@ -28,7 +28,7 @@ class Control:
             preprocessor = K15Preprocessor(self._candidates_gen, self._candidates_test,
                                            self.optimization)
         else:
-            preprocessor = G91Preprocessor(self._candidates_gen, self._candidates_test,
+            preprocessor = G94Preprocessor(self._candidates_gen, self._candidates_test,
                                            self.optimization)
 
         preprocessor.preprocess(program)

@@ -14,7 +14,7 @@ setup(
     long_description_content_type='text/markdown',
     author='Javier Garea',
     author_email='javier.garea@udc.es',
-    url='https://github.com/javiergarea/eclingo',
+    url='https://github.com/potassco/eclingo',
     license='MIT',
     keywords=[
         'artificial intelligence',

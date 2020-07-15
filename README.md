@@ -1,18 +1,18 @@
 # eclingo
 
-> A solver for epistemic logic programs.
+> A solver for Epistemic Logic Programs.
 
-![Travis](https://travis-ci.com/javiergarea/eclingo.svg?token=UsJRkwzSfzyEzdaYoHPd&branch=master&status=passed)
-![GitHub](https://img.shields.io/github/license/javiergarea/eclingo?color=blue)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/javiergarea/eclingo)
+![Travis](https://travis-ci.com/potassco/eclingo.svg?token=UsJRkwzSfzyEzdaYoHPd&branch=master&status=passed)
+![GitHub](https://img.shields.io/github/license/potassco/eclingo?color=blue)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/potassco/eclingo)
 
 ---
 
 ## Description
 `eclingo` is a solver for epistemic logic programs built upon the ASP system [`clingo`](https://github.com/potassco/clingo).  
 Currently, `eclingo` can compute world views under the following semantics:
-- Gelfond 1991 (G91) [[1]](#references)
-- Kahl et al. 2015 (K15) [[2]](#references)
+- Gelfond 1991; Gelfond and Przymusinska 1993; Gelfond 1994 (G94) [[1, 2, 3]](#references)
+- Kahl et al. 2015 (K15) [[4]](#references)
 
 ## Dependencies
 
@@ -25,7 +25,7 @@ Currently, `eclingo` can compute world views under the following semantics:
 
 Clone this repo:
 ```
-git clone https://github.com/javiergarea/eclingo.git
+git clone https://github.com/potassco/eclingo.git
 ```
 
 ### Setup
@@ -40,7 +40,7 @@ pip install .
 
 ```
 $ eclingo --help
-eclingo version 1.0.0
+eclingo version 0.2.0
 usage: eclingo [-h] [-n MODELS] [-k] [-op OPTIMIZATION] [-c CONST]
                input_files [input_files ...]
 
@@ -117,13 +117,13 @@ Run `eclingo` passing the input files paths as arguments.
 
 ```
 $ eclingo test/eligible/eligible.lp test/eligible/input/eligible10.lp
-eclingo version 1.0.0
+eclingo version 0.2.0
 Solving...
 Answer: 1
-&k{ -eligible(van) }    &k{ eligible(mary) }    &k{ eligible(nancy) }   &k{ eligible(paul) }    &k{ eligible(sam) }     &k{ eligible(tim) }
+&k{ -eligible(van) } &k{ eligible(mary) } &k{ eligible(nancy) } &k{ eligible(paul) } &k{ eligible(sam) } &k{ eligible(tim) }
 SATISFIABLE
 
-Elapsed time: 0.011072 s
+Elapsed time: 0.008156 s
 ```
 > Note that you can provide several paths to split the problem encoding from its instances.
 
@@ -133,7 +133,7 @@ The `-n` flag allows the user to select the maximum number of models to compute 
 
 ```
 $ eclingo test/prog/input/prog02.lp -n 0
-eclingo version 1.0.0
+eclingo version 0.2.0
 Solving...
 Answer: 1
 &k{ a }
@@ -141,7 +141,7 @@ Answer: 2
 &k{ b }
 SATISFIABLE
 
-Elapsed time: 0.004526 s
+Elapsed time: 0.005810 s
 ```
 > By default, `eclingo` computes just one model.
 
@@ -150,23 +150,27 @@ We can use the `-c` flag to declare a constant.
 In the case of a planning problem, this is useful to indicate the length of the path:
 ```
 $ eclingo test/yale/yale.lp test/yale/input/yale04.lp -c length=4
-eclingo version 1.0.0
+eclingo version 0.2.0
 Solving...
 Answer: 1
-&k{ occurs(load, 0) }   &k{ occurs(load, 2) }   &k{ occurs(pull_trigger, 1) }   &k{ occurs(pull_trigger, 3) }
+&k{ occurs(load, 0) } &k{ occurs(load, 2) } &k{ occurs(pull_trigger, 1) } &k{ occurs(pull_trigger, 3) }
 SATISFIABLE
 
-Elapsed time: 0.058982 s
+Elapsed time: 0.014135 s
 ```
 
 ## License
 
-- **[MIT license](https://github.com/javiergarea/eclingo/blob/master/LICENSE)**
+- **[MIT license](https://github.com/potassco/eclingo/blob/master/LICENSE)**
 
 ---
 
 ## References
 
-[1] Gelfond, M.: Strong introspection. In: Dean, T.L., McKeown, K. (eds.) Proceedings of the AAAI Conference. vol. 1, pp. 386–391. AAAI Press/The MIT Press (1991)
+[1] Gelfond, M. 1991. Strong introspection. In Proceedings of the Ninth National Conference on Artificial Intelligence (AAAI’91), T. Dean and K. McKeown, Eds. AAAI Press / The MIT Press, 386–391.
 
-[2] Kahl, P., Watson, R., Balai, E., Gelfond, M., Zhang, Y.: The language of epistemic specifications (refined) including a prototype solver. Journal of Logic and Computation (2015)
+[2] Gelfond, M. and Przymusinska, H. 1993. Reasoning on open domains. In Logic Programming and Non-monotonic Reasoning, Proceedings of the Second International Workshop, Lisbon, Portugal, June 1993, L. Moniz Pereira and A. Nerode, Eds. MIT Press, 397–413.
+
+[3] Gelfond, M. 1994. Logic programming and reasoning with incomplete information. Annals of Mathematics and Artificial Intelligence 12, 1-2, 89–116.
+
+[4] Kahl, P., Watson, R., Balai, E., Gelfond, M., and Zhang, Y. 2015. The language of epistemic specifications (refined) including a prototype solver. Journal of Logic and Computation.
