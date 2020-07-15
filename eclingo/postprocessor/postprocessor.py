@@ -24,7 +24,8 @@ class Postprocessor:
                        for atom in k_atoms]
         else:
             symbols = [Symbol(atom.name.replace('aux_', '').replace('sn_', '').replace('not_', ''),
-                              atom.arguments, True, EpistemicSign.StrongNegation
+                              atom.arguments, True, EpistemicSign.BothNegations
+                              if 'not_sn_' in atom.name else EpistemicSign.StrongNegation
                               if 'sn_' in atom.name else EpistemicSign.Negation
                               if 'not_' in atom.name else EpistemicSign.NoSign)
                        for atom in model]
@@ -90,7 +91,16 @@ class _EpistemicStrongNegation:
 class _EpistemicNegation:
 
     def __repr__(self):
-        return '~'
+        return '~ '
+
+    def __lt__(self, other):
+        return other in [EpistemicSign.NoSign, EpistemicSign.StrongNegation]
+
+
+class _EpistemicBothNegations:
+
+    def __repr__(self):
+        return '~ -'
 
     def __lt__(self, other):
         return True
@@ -101,3 +111,4 @@ class EpistemicSign:
     NoSign = _EpistemicNoSign()
     Negation = _EpistemicNegation()
     StrongNegation = _EpistemicStrongNegation()
+    BothNegations = _EpistemicBothNegations()
