@@ -5,30 +5,32 @@ class Postprocessor:
         self._show_signatures = show_signatures
 
     def postprocess(self, model, assumptions):
-        if self._show_signatures:
-            show_atoms = []
-            for (name, arity, positive) in self._show_signatures:
-                show_atoms += [atom.symbol for atom in
-                               self._candidates_test.symbolic_atoms.by_signature(
-                                   name, arity, positive)]
+        symbols = []
+        if assumptions:
+            if self._show_signatures:
+                show_atoms = []
+                for (name, arity, positive) in self._show_signatures:
+                    show_atoms += [atom.symbol for atom in
+                                   self._candidates_test.symbolic_atoms.by_signature(
+                                    name, arity, positive)]
 
-            self._candidates_test.configuration.solve.enum_mode = 'cautious'
-            with self._candidates_test.solve(yield_=True, assumptions=assumptions) \
-                    as candidates_test_handle:
-                *_, cautious_model = candidates_test_handle
-                k_atoms = [atom for atom in show_atoms
-                           if atom in cautious_model.symbols(atoms=True)]
+                self._candidates_test.configuration.solve.enum_mode = 'cautious'
+                with self._candidates_test.solve(yield_=True, assumptions=assumptions) \
+                        as candidates_test_handle:
+                    *_, cautious_model = candidates_test_handle
+                    k_atoms = [atom for atom in show_atoms
+                               if atom in cautious_model.symbols(atoms=True)]
 
-            symbols = [Symbol(atom.name, atom.arguments, True, EpistemicSign.NoSign
-                              if atom.positive else EpistemicSign.StrongNegation)
-                       for atom in k_atoms]
-        else:
-            symbols = [Symbol(atom.name.replace('aux_', '').replace('sn_', '').replace('not_', ''),
-                              atom.arguments, True, EpistemicSign.BothNegations
-                              if 'not_sn_' in atom.name else EpistemicSign.StrongNegation
-                              if 'sn_' in atom.name else EpistemicSign.Negation
-                              if 'not_' in atom.name else EpistemicSign.NoSign)
-                       for atom in model]
+                symbols = [Symbol(atom.name, atom.arguments, True, EpistemicSign.NoSign
+                           if atom.positive else EpistemicSign.StrongNegation)
+                           for atom in k_atoms]
+            else:
+                symbols = [Symbol(atom.name.replace('aux_', '').replace('sn_', '')
+                           .replace('not_', ''), atom.arguments, True,
+                           EpistemicSign.BothNegations if 'not_sn_' in atom.name else
+                           EpistemicSign.StrongNegation if 'sn_' in atom.name else
+                           EpistemicSign.Negation if 'not_' in atom.name else
+                           EpistemicSign.NoSign) for atom in model]
         return Model(symbols)
 
 
@@ -38,7 +40,7 @@ class Model:
         self.symbols = symbols
 
     def __repr__(self):
-        return '\t'.join(map(str, sorted(self.symbols)))
+        return ' '.join(map(str, sorted(self.symbols)))
 
     def __eq__(self, other):
         return self.symbols == other.symbols
