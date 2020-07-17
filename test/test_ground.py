@@ -43,5 +43,4 @@ class TestGroundObjectiveProgramsG91(unittest.TestCase):
         self.eclingo_control.add(program)
         self.eclingo_control.parse()
         result = [sorted(model.symbols) for model in self.eclingo_control.solve()]
-        print(result)
-        # self.assertEqual(result, [[]])
+        self.assertEqual(result, [[Symbol('a', [], True, EpistemicSign.NoSign)]])
