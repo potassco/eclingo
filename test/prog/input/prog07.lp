@@ -1,2 +1,2 @@
-a :- not &k{ ~ b }.
-b :- not &k{ ~ a }.
+a :- not &k{ not b }.
+b :- not &k{ not a }.

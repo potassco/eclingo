@@ -1,66 +1,110 @@
+"""
+Main module providing the application logic.
+"""
+
+from typing import Sequence
+from eclingo.internal_states.internal_control import InternalStateControl
+from eclingo.internal_states import internal_control
+from eclingo.config import AppConfig
+import sys
+# from textwrap import dedent
+from collections import OrderedDict
 import clingo
-from eclingo.preprocessor.preprocessor import G94Preprocessor, K15Preprocessor
-from eclingo.parser.parser import Parser
-from eclingo.solver.solver import Solver
-from eclingo.postprocessor.postprocessor import Postprocessor
-from eclingo.utils.logger import logger, silent_logger
+import eclingo.util.clingoext as clingoext
+from pprint import pprint
+from eclingo.control import Control
 
 
-__version__ = '0.2.0'
-__optimization__ = 3
+_FALSE = ["0", "no", "false"]
+_TRUE = ["1", "yes", "true"]
 
 
-class Control:
 
-    def __init__(self, max_models=1, semantics=False, optimization=__optimization__):
-        self.models = 0
-        self.max_models = max_models
-        self.semantics = semantics
-        self.optimization = optimization
-        self._candidates_gen = clingo.Control(['0', '--project'], logger=silent_logger)
-        self._candidates_test = clingo.Control(['0'], logger=logger)
-        self._epistemic_atoms = {}
-        self._predicates = []
-        self._show_signatures = set()
 
-    def add(self, program):
-        if self.semantics:
-            preprocessor = K15Preprocessor(self._candidates_gen, self._candidates_test,
-                                           self.optimization)
+
+class Application(internal_control.Application):
+    """
+    Application class that can be used with `clingo.clingo_main` to solve CSP
+    problems.
+    """
+
+    def __init__(self):
+        self.program_name = "eclingo"
+        self.version = "0.2.1"
+        self.config = AppConfig()
+        self.occurrences = OrderedDict()
+        self.todo = []
+
+    def _parse_int(self, config, attr, min_value=None, max_value=None):
+        """
+        Parse integer and store result in `config.attr`.
+
+        Here `attr` has to be the name of an attribute. Optionally, a minimum
+        and maximum value can be given for the integer.
+        """
+        def parse(value):
+            num = int(value)
+            if min_value is not None and num < min_value:
+                return False
+            if max_value is not None and num > max_value:
+                return False
+            setattr(config, attr, num)
+            return True
+        return parse
+
+
+    def register_options(self, options):
+        """
+        Register eclingo related options.
+        """
+        group = "Eclingo Options"
+
+        options.add(
+            group, "eclingo-verbose",
+            "Set verbosity level of eclingo to <n>", self._parse_int(self.config, "eclingo_verbose"), argument="<n>")
+
+    def _read(self, path):
+        if path == "-":
+            return sys.stdin.read()
+        with open(path) as file_:
+            return file_.read()
+
+    def main(self, control: InternalStateControl, files: Sequence[str]) -> None:
+        """
+        Entry point of the application registering the propagator and
+        implementing the standard ground and solve functionality.
+        """
+        if not files:
+            files = ["-"]
+
+
+        eclingo_control = Control(control, self.config)
+
+        for path in files:
+            eclingo_control.add_program(self._read(path))
+
+        eclingo_control.ground()
+        eclingo_control.preprocess()
+        eclingo_control.prepare_solver()
+
+        sys.stdout.write('Solving...\n')
+        wv_number = 1
+        for world_view in eclingo_control.solve():
+            sys.stdout.write('World view: %d\n' % wv_number)
+            sys.stdout.write(str(world_view))
+            sys.stdout.write('\n')
+            wv_number += 1
+        if wv_number > 1:
+            sys.stdout.write('SATISFIABLE\n')
         else:
-            preprocessor = G94Preprocessor(self._candidates_gen, self._candidates_test,
-                                           self.optimization)
+            sys.stdout.write('UNSATISFIABLE\n')
 
-        preprocessor.preprocess(program)
-        self._predicates.extend(preprocessor.predicates)
-        self._show_signatures.update(preprocessor.show_signatures)
 
-        del preprocessor
+def main():
+    sys.argv.append('--outf=3')
+    application = Application()
+    result = internal_control.clingo_main(application, sys.argv[1:])
+    sys.exit(int(result))
 
-    def add_const(self, name, value):
-        self.add(f'#const {name}={value}.')
-
-    def load(self, input_path):
-        with open(input_path, 'r') as program:
-            self.add(program.read())
-
-    def parse(self):
-        parser = Parser(self._candidates_gen, self._candidates_test,
-                        self._predicates, self.optimization)
-
-        parser.parse()
-        self._epistemic_atoms.update(parser.epistemic_atoms)
-
-        del parser
-
-    def solve(self):
-        solver = Solver(self._candidates_gen, self._candidates_test,
-                        self._epistemic_atoms, self.max_models)
-        postprocessor = Postprocessor(self._candidates_test, self._show_signatures)
-
-        for model, assumptions in solver.solve():
-            self.models += 1
-            yield postprocessor.postprocess(model, assumptions)
-
-        del solver
-        del postprocessor
+if __name__ == '__main__':
+    main()

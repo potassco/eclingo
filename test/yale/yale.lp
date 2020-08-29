@@ -4,8 +4,8 @@ stepless(0..length-1).
 fluent(F) :- inertial(F).
 
 %%%% inertia %%%%
-holds(F,S+1) :- inertial(F), stepless(S), holds(F,S),not  -holds(F,S+1).
--holds(F,S+1):- inertial(F), stepless(S),-holds(F,S),not   holds(F,S+1).
+ holds(F,S+1) :- inertial(F), stepless(S), holds(F,S),not  -holds(F,S+1).
+-holds(F,S+1) :- inertial(F), stepless(S), -holds(F,S),not   holds(F,S+1).
 
 %%% non-concurrent actions
 :- occurs(A,S), occurs(B,S), A!=B.
@@ -14,7 +14,7 @@ holds(F,S+1) :- inertial(F), stepless(S), holds(F,S),not  -holds(F,S+1).
 -holds(F,0):-not  holds(F,0),fluent(F).
 
 %%%%% goal  %%%%%%%
-goal :- -holds(alive,length).
+goal :- -holds(alive, length).
 
 %%%% epistemic %%%%%%%
 :- occurs(A,S), not &k{executable(A,S)}.
