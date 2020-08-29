@@ -2,7 +2,6 @@
 # pylint: disable=no-name-in-module
 # pylint: disable=import-error
 from copy import copy
-import eclingo
 from typing import Iterable, List, Tuple, Union
 
 import clingo as _clingo
