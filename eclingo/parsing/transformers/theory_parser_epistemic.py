@@ -2,6 +2,7 @@
 # pylint: disable=no-name-in-module
 # pylint: disable=import-error
 from copy import copy
+import eclingo
 from typing import Iterable, List, Tuple, Union
 
 import clingo as _clingo
@@ -24,34 +25,29 @@ from .theory_parser_literals import \
 # pylint: disable=unused-argument
 # pylint: disable=invalid-name
 
-class ParseEpistemicLiteralElementsTransformer(_tf.Transformer):
+class ApplyToEpistemicAtomsElementsTransformer(_tf.Transformer):
+
+    def __init__(self, fun, update_fun=None):
+        self.fun = fun
+        self.update_fun = update_fun
 
     def visit_TheoryAtom(self, atom, loc="body"):
-        """
-        TheoryAtom(location: Location, term: term, elements: TheoryAtomElement*)
-        """
-        result = atom
         if atom.term.name == "k" and not atom.term.arguments:
-            result.elements = [_theory_term_to_literal(e) for e in atom.elements]
-        return result
-
-def parse_epistemic_literals_elements(rule):
-    return ParseEpistemicLiteralElementsTransformer()(rule)
+            if self.update_fun is None:
+                new_elements = [self.fun(e) for e in atom.elements]
+            else:
+                new_elements = []
+                for element in atom.elements:
+                    new_element, update = self.fun(element)
+                    new_elements.append(new_element)
+                    self.update_fun(update)
+            atom.elements = new_elements
+            return atom
 
 ####################################################################################
 
-class EpistemicLiteralStrongNegationToAuxiliarTransformer(_tf.Transformer):
-
-    def __init__(self, strong_negation_prefix="sn"):
-        self.strong_negation_prefix = strong_negation_prefix
-        self.replacement = set()
-
-    def visit_TheoryAtom(self, atom, loc="body"):
-        if atom.term.name == "k" and not atom.term.arguments:
-            atom, replacement = make_strong_negations_auxiliar(atom)
-            self.replacement.update(replacement)
-        return atom
-
+def parse_epistemic_literals_elements(rule):
+    return ApplyToEpistemicAtomsElementsTransformer(_theory_term_to_literal)(rule)
 
 ####################################################################################
 
@@ -66,25 +62,10 @@ def make_strong_negation_auxiliar_in_epistemic_literals(stm: _ast.AST) -> Tuple[
       * the second element is its arity
       * the third element is the name of the auxiliary atom that replaces it
     """
-    trn = EpistemicLiteralStrongNegationToAuxiliarTransformer()
+    replacement = set()
+    trn = ApplyToEpistemicAtomsElementsTransformer(make_strong_negations_auxiliar, replacement.update)
     stm = trn.visit(stm)
-    return (stm, trn.replacement)
-
-
-####################################################################################
-
-
-class EpistemicLiteralDefaultNegationToAuxiliarTransformer(_tf.Transformer):
-
-    def __init__(self, default_negation_prefix="not"):
-        self.default_negation_prefix = default_negation_prefix
-        self.replacement = []
-
-    def visit_TheoryAtom(self, atom, loc="body"):
-        if atom.term.name == "k" and not atom.term.arguments:
-            atom, replacement = make_default_negation_auxiliar(atom)
-            self.replacement.extend(replacement)
-        return atom
+    return (stm, replacement)
 
 
 ####################################################################################
@@ -99,9 +80,9 @@ def make_default_negation_auxiliar_in_epistemic_literals(stm: _ast.AST) -> Tuple
       * the first element is the auxiliary literal replacing the negated literal
       * the second element is the original literal replaced
     """
-    trn = EpistemicLiteralDefaultNegationToAuxiliarTransformer()
+    replacement = []
+    trn = ApplyToEpistemicAtomsElementsTransformer(make_default_negation_auxiliar, replacement.extend)
     stm = trn.visit(stm)
-    replacement = trn.replacement
     return (stm, replacement)
 
 
