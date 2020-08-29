@@ -25,6 +25,7 @@ class TestExamples(unittest.TestCase):
     def test_prog_g94(self):
         for i in range(1, 11):
             control  = eclingo.internal_states.InternalStateControl(logger=silent_logger)
+            control.configuration.solve.models  = 0
             eclingo_control = eclingo.Control(control=control)
             path = os.path.dirname(os.path.realpath(__file__))
             input_path = os.path.join(path, INPUT_PROG_PATH)
@@ -46,6 +47,7 @@ class TestExamples(unittest.TestCase):
     def test_eligible_g94(self):
         for i in range(1, 17):
             control  = eclingo.internal_states.InternalStateControl(logger=silent_logger)
+            control.configuration.solve.models  = 0
             eclingo.config.add_efacts = True
             eclingo_control = eclingo.Control(control=control)
             # eclingo_control.config.eclingo_verbose = 2
@@ -73,6 +75,7 @@ class TestExamples(unittest.TestCase):
         for i in range(1, 9):
             if i != 6:
                 control  = eclingo.internal_states.InternalStateControl(logger=silent_logger)
+                control.configuration.solve.models  = 0
                 eclingo_control = eclingo.Control(control=control)
                 # eclingo_control.config.eclingo_verbose = 10
 

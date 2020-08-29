@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Union
 from clingo import Symbol
-from clingo.ast import Sign
+from clingo.ast import Sign # pylint: disable=import-error
 
 @dataclass(eq=True, unsafe_hash=True, order=True)
 class Literal:

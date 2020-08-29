@@ -1,5 +1,4 @@
 import sys
-from pprint import pprint
 from typing import Iterator
 
 from eclingo import internal_states

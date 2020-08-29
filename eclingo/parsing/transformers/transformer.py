@@ -25,12 +25,6 @@ import clingo as _clingo
 from clingo import ast as _ast
 
 
-
-g_future_prefix = "__future_"
-g_variable_prefix = "X"
-g_time_parameter_name = "__t"
-g_time_parameter_name_alt = "__u"
-
 def str_location(loc):
     """
     This function takes a location from a clingo AST and transforms it into a

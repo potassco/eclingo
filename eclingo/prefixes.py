@@ -1,5 +1,5 @@
 from clingo import Function, Symbol
-from clingo.ast import Sign
+from clingo.ast import Sign # pylint: disable=import-error
 
 from eclingo.literals import Literal, EpistemicLiteral
 
@@ -48,7 +48,7 @@ def symbol_to_epistemic_literal(symbol: Symbol) -> EpistemicLiteral:
     else:
         sign = Sign.NoSign
 
-    # if L is of the form -a
+    # L is of the form -a
     symbol_is_explicitely_negated = name.startswith(SN_PREFIX)
     if symbol_is_explicitely_negated:
         name = name[len(SN_PREFIX):]

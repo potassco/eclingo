@@ -1,12 +1,14 @@
-from eclingo.config import AppConfig
-from typing import Iterable, Tuple, Union, List, Dict, Any, NamedTuple
-from copy import copy
+from typing import Dict, Iterable, List, NamedTuple, Tuple, Union
+
 import clingo  # type: ignore
 from clingo import Symbol
+
 import eclingo.util.clingoext as clingoext
+from eclingo.config import AppConfig
 from eclingo.literals import Literal
-from .parsing import parse_program as _parse_program
+
 from .internal_states import InternalStateControl
+from .parsing import parse_program as _parse_program
 
 CONTROL = Union[clingo.Control, clingoext.Control]
 

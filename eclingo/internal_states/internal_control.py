@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from dataclasses import dataclass
-from typing import Any, Callable, Iterable, Iterator, List, Sequence, Tuple, Union
+from typing import Any, Callable, Iterable, Iterator, Sequence, Tuple, Union
 
 import clingo as _clingo
 from clingo import MessageCode, Symbol, SymbolicAtom

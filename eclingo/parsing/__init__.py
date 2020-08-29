@@ -1,20 +1,26 @@
 from collections import namedtuple
-from eclingo.internal_states import ASTObject, ShowStatement
-from typing import Callable, Iterable, List, Union
+from typing import Callable, Iterable, List
 
 import clingo as _clingo
 from clingo import ast as _ast
 
 import eclingo.prefixes as _prefixes
+from eclingo.internal_states import ASTObject, ShowStatement
 
-from .transformers.theory_parser_epistemic import \
-    double_negate_epistemic_listerals, parse_epistemic_literals_elements as _parse_epistemic_literals_elements
 from .transformers.parser_negations import \
     StrongNegationReplacement as _StrongNegationReplacement
 from .transformers.theory_parser_epistemic import \
-    prefix_to_atom_names as _prefix_to_atom_names, \
-    replace_epistemic_literals_by_auxiliary_atoms as _replace_epistemic_literals_by_auxiliary_atoms, \
-    replace_negations_by_auxiliary_atoms_in_epistemic_literals as _replace_negations_by_auxiliary_atoms_in_epistemic_literals
+    double_negate_epistemic_listerals
+from .transformers.theory_parser_epistemic import \
+    parse_epistemic_literals_elements as _parse_epistemic_literals_elements
+from .transformers.theory_parser_epistemic import \
+    prefix_to_atom_names as _prefix_to_atom_names
+from .transformers.theory_parser_epistemic import \
+    replace_epistemic_literals_by_auxiliary_atoms as \
+    _replace_epistemic_literals_by_auxiliary_atoms
+from .transformers.theory_parser_epistemic import \
+    replace_negations_by_auxiliary_atoms_in_epistemic_literals as \
+    _replace_negations_by_auxiliary_atoms_in_epistemic_literals
 
 _CallbackType = Callable[[ASTObject], None]
 

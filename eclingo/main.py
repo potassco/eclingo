@@ -2,18 +2,14 @@
 Main module providing the application logic.
 """
 
-from typing import Sequence
-from eclingo.internal_states.internal_control import InternalStateControl
-from eclingo.internal_states import internal_control
-from eclingo.config import AppConfig
 import sys
-# from textwrap import dedent
 from collections import OrderedDict
-import clingo
-import eclingo.util.clingoext as clingoext
-from pprint import pprint
-from eclingo.control import Control
+from typing import Sequence
 
+from eclingo.config import AppConfig
+from eclingo.control import Control
+from eclingo.internal_states import internal_control
+from eclingo.internal_states.internal_control import InternalStateControl
 
 _FALSE = ["0", "no", "false"]
 _TRUE = ["1", "yes", "true"]
@@ -32,8 +28,6 @@ class Application(internal_control.Application):
         self.program_name = "eclingo"
         self.version = "0.2.1"
         self.config = AppConfig()
-        self.occurrences = OrderedDict()
-        self.todo = []
 
     def _parse_int(self, config, attr, min_value=None, max_value=None):
         """

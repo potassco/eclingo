@@ -1,6 +1,7 @@
 """
 Tools to work with ASTs.
 """
+# pylint: disable=no-member
 
 from copy import copy
 from itertools import chain, product
@@ -17,6 +18,7 @@ def match(term, name, arity):
             term.name == name and
             len(term.arguments) == arity)
 
+# pylint: disable=invalid-name
 
 class Visitor(object):
     """

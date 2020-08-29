@@ -4,6 +4,7 @@ import eclingo as _eclingo
 
 def solve(program):
     control  = _eclingo.internal_states.InternalStateControl(message_limit=0)
+    control.configuration.solve.models  = 0
     config   = _eclingo.config.AppConfig()
     config.eclingo_semantics = "c19-1"
     econtrol = _eclingo.control.Control(control=control, config=config)

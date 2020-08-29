@@ -1,9 +1,6 @@
-from eclingo import internal_states
 import sys
-from typing import Dict
 
-from clingo import Symbol
-
+from eclingo import internal_states
 from eclingo.config import AppConfig
 from eclingo.util import clingoext
 

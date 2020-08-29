@@ -4,9 +4,6 @@ from typing import Dict, Iterator
 from clingo import Symbol, SymbolicAtom
 
 from eclingo import internal_states
-from eclingo.internal_states.mappings import (
-    SymbolToEpistemicLiteralMappingUsingProgramLiterals,
-    SymbolToEpistemicLiteralMappingUsingShowStatements)
 from eclingo.prefixes import not_symbol
 from eclingo.solver.candidate import Candidate
 from eclingo.util import clingoext
@@ -32,7 +29,7 @@ class WorldWiewBuilder():
                 show_literal = self._epistemic_show_pos_mapping[epistemic_literal]
                 epistemic_literals.append(show_literal)
                 processed_symbols.append(show_literal.objective_literal)
-        
+
         processed_symbols_set = frozenset(processed_symbols)
 
         for epistemic_literal in candidate.neg:
@@ -78,7 +75,7 @@ class WorldWiewBuilderWithShow(WorldWiewBuilder):
             candidate_assumptions.append(assumption)
         self.control.configuration.solve.models  = 0
         self.control.configuration.solve.project = "no"
-        
+
         new_candidate_pos = []
         new_candidate_neg = []
         with self.control.solve(yield_=True, assumptions=candidate_assumptions) as handle:

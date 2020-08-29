@@ -1,11 +1,13 @@
 """
 Module to replace strong and default negations by auxiliary atoms.
 """
-from typing import Tuple, Set, Iterator, List
 from copy import copy
-from clingo import ast as _ast # type: ignore
-from . import transformer as _tf
+from typing import Iterator, List, Set, Tuple
+
+from clingo import ast as _ast  # type: ignore
+
 from . import astutil as _astutil
+from . import transformer as _tf
 
 # pylint: disable=all
 
@@ -167,6 +169,8 @@ class DefaultNegationsToAuxiliarTransformer(_tf.Transformer):
             sign = self.default_negation_prefix + "_"
         elif new_x.sign == _ast.Sign.DoubleNegation:
             sign = self.default_negation_prefix + "2_"
+        else:
+            sign = ""
        
         location  = atom.term.location
         aux_name  = sign + atom.term.name
@@ -217,5 +221,3 @@ def default_negation_auxiliary_rule_replacement(location, replacement: NotReplac
     """
     for original_literal, aux_literal in replacement:
         yield default_negation_auxiliary_rule(location, aux_literal, original_literal, gard)
-
-
