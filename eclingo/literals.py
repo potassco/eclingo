@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 from typing import Union
 from clingo import Symbol
-from eclingo.clingo_types import Sign
-
+from clingo.ast import Sign
 
 @dataclass(eq=True, unsafe_hash=True, order=True)
 class Literal:
