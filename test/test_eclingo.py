@@ -134,36 +134,32 @@ class TestEclingoNonGround(TestCase):
             a(1).
             {a(2)}.
             :- {a(2)} = 0.
-            '''),
-            [['&k{a(1)}', '&k{a(2)}']])
+            '''), [['&k{a(1)}', '&k{a(2)}']])
 
 
 class TestEclingoAggregates(TestCase):
-    
+
     def test_ground_programs(self):
         self.assert_models(solve('''
             a.
             b :- a.
             c :- &k{b}.
             d :- &k{c}.
-            '''),
-            [['&k{b}', '&k{c}']])
+            '''), [['&k{b}', '&k{c}']])
 
         self.assert_models(solve('''
             a.
             b :- #count{a} >= 1.
             c :- &k{b}.
             d :- &k{c}.
-            '''),
-            [['&k{b}', '&k{c}']])
+            '''), [['&k{b}', '&k{c}']])
 
         self.assert_models(solve('''
             a :- not &k{ not a}.
             b :- a.
             c :- &k{b}.
             d :- &k{c}.
-            '''),
-            [[], ['&m{a}', '&k{b}', '&k{c}']])
+            '''), [[], ['&m{a}', '&k{b}', '&k{c}']])
 
         self.assert_models(solve('''
             {fact}.
@@ -172,8 +168,7 @@ class TestEclingoAggregates(TestCase):
             b :- #sum{1:fact; 25:a} >= 24.
             c :- &k{b}.
             d :- &k{c}.
-            '''),
-            [[], ['&m{a}', '&k{b}', '&k{c}']])
+            '''), [[], ['&m{a}', '&k{b}', '&k{c}']])
 
 
 

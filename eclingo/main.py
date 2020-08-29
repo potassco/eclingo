@@ -3,7 +3,6 @@ Main module providing the application logic.
 """
 
 import sys
-from collections import OrderedDict
 from typing import Sequence
 
 from eclingo.config import AppConfig

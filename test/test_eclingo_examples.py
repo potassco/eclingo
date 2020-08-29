@@ -21,7 +21,7 @@ OUTPUT_YALE_PATH = 'yale/output/'
 
 
 class TestExamples(unittest.TestCase):
-    
+
     def test_prog_g94(self):
         for i in range(1, 11):
             control  = eclingo.internal_states.InternalStateControl(logger=silent_logger)
