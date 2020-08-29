@@ -199,20 +199,9 @@ class EpistemicLiteralNegationsToAuxiliarTransformer(_tf.Transformer):
         head = rule.head
         body = rule.body
 
-        # head = self.visit(head, loc="head") # head is not visited
         body, self.sn_replacement = make_strong_negation_auxiliar_in_epistemic_literals(body)
         guard = build_guard(body)
         body, not_replacement = make_default_negation_auxiliar_in_epistemic_literals(body)
-
-        # if self.user_prefix != "":
-        #     skip = set()
-        #     skip = set((aux_name, arity) for (_, arity, aux_name) in self.sn_replacement)
-        #     skip.update(_astutil.signature(aux_lit) for (_, aux_lit) in not_replacement)
-        #     head = prefix_to_atom_names(head, self.user_prefix, skip)
-        #     body = prefix_to_atom_names(body, self.user_prefix, skip)
-        #     guard = prefix_to_atom_names(guard, self.user_prefix, skip)
-        #     self.sn_replacement = set([ (_prefix_to_atom_names(self.user_prefix, name), arity, aux_name) for (name, arity, aux_name) in self.sn_replacement])
-        #     not_replacement = [ (prefix_to_atom_names(lit, self.user_prefix, skip), aux_lit) for (lit, aux_lit) in not_replacement]
         self.aux_rules.extend(default_negation_auxiliary_rule_replacement(rule.location, not_replacement, guard))
         return _ast.Rule(rule.location, head, body)
 
@@ -307,16 +296,6 @@ class EClingoTransformer(_tf.Transformer):
             x = copy(x)
             x.head = head
             x.body = body
-            # guard = build_guard(body)
-            # new_guard = []
-            # for stm in guard:
-            #     for (nested_literal, aux_atom) in self.epistemic_replacements:
-            #         if stm.type == _ast.ASTType.Literal and stm.atom == aux_atom:
-            #             new_guard.append(_ast.Literal(stm.location, stm.sign, nested_literal.atom))
-            #         else:
-            #             new_guard.append(stm)
-            # guard = new_guard
-
             for (nested_literal, aux_atom) in self.epistemic_replacements:
                 conditional_literal = _ast.ConditionalLiteral(x.location, ensure_literal(aux_atom), [])
                 aux_rule_head       = _ast.Aggregate(x.location, None, [conditional_literal], None)
