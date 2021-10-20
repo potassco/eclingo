@@ -9,7 +9,7 @@
 ---
 
 ## Description
-`eclingo` is a solver for epistemic logic programs [[1]] built upon the ASP system [`clingo`](https://github.com/potassco/clingo).  
+`eclingo` is a solver for epistemic logic programs [[1]](#references) built upon the ASP system [`clingo`](https://github.com/potassco/clingo).  
 Currently, `eclingo` can compute world views under the following semantics:
 - Gelfond 1991; Gelfond and Przymusinska 1993; Gelfond 1994 (G94) [[2, 3, 4]](#references)
 
