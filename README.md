@@ -76,7 +76,6 @@ For example, the show statement:
 ```
 refers to the subjective atom `&k{p/1}`.
 
-```
 
 ## License
 
