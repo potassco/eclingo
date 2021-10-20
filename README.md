@@ -22,6 +22,13 @@ Currently, `eclingo` can compute world views under the following semantics:
 
 ### Clone
 
+Install the correct version of python and clingo:
+```
+conda create --name eclingo-0.2.1-dev python=3.8
+conda activate eclingo-0.2.1-dev
+conda install -c potassco/label/dev clingo=5.5.0 mypy
+```
+
 Clone this repo:
 ```
 git clone https://github.com/potassco/eclingo.git
