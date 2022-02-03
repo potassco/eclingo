@@ -26,7 +26,7 @@ Install the correct version of python and clingo:
 ```
 conda create --name eclingo-0.2.1-dev python=3.8
 conda activate eclingo-0.2.1-dev
-conda install -c potassco/label/dev clingo=5.5.0 mypy
+conda install -c mypy
 ```
 
 Clone this repo:
@@ -39,7 +39,14 @@ git clone https://github.com/potassco/eclingo.git
 Change your directory and install `eclingo`:
 ```
 cd eclingo/
+conda install clingo-5.5.0-py38lua53hf484d3e_20.tar.bz2
 pip install .
+```
+
+### Test
+```
+pip3 install python3-pytest
+python3 -m pytest
 ```
 
 ## Usage
