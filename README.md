@@ -26,7 +26,7 @@ Install the correct version of python and clingo:
 ```
 conda create --name eclingo-0.2.1-dev python=3.8
 conda activate eclingo-0.2.1-dev
-conda install -c mypy
+conda install mypy
 ```
 
 Clone this repo:
