@@ -32,6 +32,7 @@ conda install mypy
 Clone this repo:
 ```
 git clone https://github.com/potassco/eclingo.git
+git checkout develop
 ```
 
 ### Setup
