@@ -46,7 +46,7 @@ pip install .
 
 ### Test
 ```
-pip3 install python3-pytest
+pip install -U pytest
 python3 -m pytest
 ```
 
