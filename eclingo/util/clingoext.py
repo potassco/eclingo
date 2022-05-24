@@ -1,41 +1,45 @@
 import abc
-import textwrap as _textwrap
+import textwrap
 from typing import Any, Callable, Dict, Iterable, List, Sequence, Tuple, Union
 
-import clingo as _clingo # type: ignore
+import clingo
 from clingo import MessageCode, Symbol, TruthValue
-from clingo import ast as _ast  # type: ignore # pylint: disable=import-error
+from clingo import ast
+from clingo.ast import parse_string
 
-from eclingo.util import astutil as _astutil
+from eclingo.util import astutil
 from eclingo.util.groundprogram import ClingoExternal, ClingoOutputAtom, ClingoProject, ClingoRule, ClingoWeightRule, GroundProgram
+
 
 
 class ProgramBuilder():
 
-    def __init__(self, builder, program):
-        self.builder = builder
+    def __init__(self, control, program):
+        self.control = control
         self.program = program
+        self.bulider = clingo.ast.ProgramBuilder(self.control)
 
     def __enter__(self):
-        self.builder.__enter__()
+        self.bulider.__enter__()
         return self
 
     def __exit__(self, type_, value, traceback):
-        return self.builder.__exit__(type_, value, traceback)
 
-    def add(self, statement: _ast.AST): # pylint: disable=no-member
+        return self.bulider.__exit__(type_, value, traceback)
+
+    def add(self, statement: ast.AST): # pylint: disable=no-member
         self.program.append(statement)
         try:
-            return self.builder.add(statement)
+            return self.bulider.add(statement)
         except RuntimeError as error:
             if len(error.args) != 1:
                 raise error
             if error.args[0] == 'literal expected':
-                error.args = ('literal expected, got\n' + _textwrap.indent(_astutil.ast_repr(statement), 13*' '), )
+                error.args = ('literal expected, got\n' + textwrap.indent(astutil.ast_repr(statement), 13*' '), )
             raise error
         except AttributeError as error:
             if error.args[0] == "'list' object has no attribute 'location'":
-                error.args = (error.args[0] + '\n' + _textwrap.indent(_astutil.ast_repr(statement), 13*' '), )
+                error.args = (error.args[0] + '\n' + textwrap.indent(astutil.ast_repr(statement), 13*' '), )
             raise error
 
 
@@ -70,105 +74,24 @@ class SymbolicBackend():
         return (self._add_symbol_and_return_its_code(symbol) for symbol in symbols)
 
     def _add_symbols_and_return_their_negated_codes(self, symbols: Iterable[Symbol]):
-        return (-x for x in self._add_symbols_and_return_their_codes(symbols))
-
-
-# class Backend():
-#     def __init__(self, backend, program):
-#         self.backend = backend
-#         self.program = program
-
-#     def __enter__(self):
-#         self.backend.__enter__()
-#         return self
-
-#     def __exit__(self, type_, value, traceback):
-#         return self.backend.__exit__(type_, value, traceback)
-
-#     def add_acyc_edge(self, node_u: int, node_v: int, condition: List[int]) -> None:
-#         return self.backend.add_acyc_edge(node_u, node_v, condition)
-
-#     def add_assume(self, literals: List[int]) -> None:
-#         self.program.add_assume(literals)
-#         return self.backend.add_assume(literals)
-
-#     def add_atom(self, symbol: Optional[Symbol] = None) -> int:
-#         if symbol is not None:
-#             atom = self.backend.add_atom(symbol)
-#             self.program.add(ClingoOutputAtom(symbol, atom))
-#         else:
-#             atom = self.backend.add_atom()
-#         return atom
-
-#     def add_external(self, atom: int, value: TruthValue = TruthValue.False_) -> None:
-#         self.program.add_external(atom, value)
-#         return self.backend.add_external(atom, value)
-
-#     def add_heuristic(self, atom: int, type_: HeuristicType, bias: int, priority: int, condition: List[int]) -> None:
-#         self.program.add_heuristic(atom, type_, bias, priority, condition)
-#         return self.backend.add_heuristic(atom, type_, bias, priority, condition)
-
-#     def add_minimize(self, priority: int, literals: List[Tuple[int, int]]) -> None:
-#         self.program.add_minimize(priority, literals)
-#         return self.backend.add_minimize(priority, literals)
-
-#     def add_project(self, atoms: List[int]) -> None:
-#         self.program.add_project(atoms)
-#         return self.backend.add_project(atoms)
-
-#     def add_rule(self, head: Iterable[int], body: Iterable[int] = [], choice: bool = False) -> None:  # pylint: disable=dangerous-default-value
-#         # self.program.add_rule(choice, list(head), list(body))
-#         return self.backend.add_rule(head, body, choice)
-
-#     def add_weight_rule(self, head: Iterable[int], lower: int, body: Iterable[Tuple[int, int]] = [], choice: bool = False) -> None: # pylint: disable=dangerous-default-value
-#         self.program.add_weight_rule(choice, list(head), list(body), lower)
-#         return self.backend.add_weight_rule(head, lower, body, choice)
-
-#     def add(self, obj: Union[ClingoObject, Iterable[ClingoObject]]) -> None:
-#         if isinstance(obj, ClingoRule):
-#             self.add_rule(obj.head, obj.body, obj.choice)
-#         elif isinstance(obj, ClingoOutputAtom):
-#             self.add_atom(obj.symbol)
-#         if isinstance(obj, ClingoProject):
-#             pass
-#             # self.add_projection(obj)
-#         elif isinstance(obj, ClingoAssume):
-#             pass
-#             # self.assumtions.append(obj)
-#         elif isinstance(obj, ClingoExternal):
-#             pass
-#             # self.add_external(obj)
-#         elif isinstance(obj, ClingoHeuristic):
-#             pass
-#             # self.heuristics.append(obj)
-#         elif isinstance(obj, ClingoMinimize):
-#             pass
-#             # self.minimizes.append(obj)
-#         elif isinstance(obj, ClingoWeightRule):
-#             pass
-#             # self.weight_rules.append(obj)
-#         elif isinstance(obj, Iterable): # pylint: disable=isinstance-second-argument-not-valid-type
-#             for obj2 in obj:
-#                 self.add(obj2)
-
-
+        return (-x for x in self._add_symbols_and_return_their_codes(symbols))  
 
 class Control(object):  # type: ignore
 
-    def __init__(self, arguments: Iterable[str] = (), logger: Callable[[MessageCode, str], None] = None, message_limit: int = 20, *, control: _clingo.Control = None):
+    def __init__(self, arguments: Iterable[str] = (), logger: Callable[[MessageCode, str], None] = None, message_limit: int = 20, *, control: clingo.Control = None):
         if control is None:
-            control = _clingo.Control(arguments, logger, message_limit)
+            control = clingo.Control(arguments, logger, message_limit)
         self.control = control
-        self.parsed_program: List[_ast.AST] = [] # pylint: disable=no-member
+        self.parsed_program: List[ast.AST] = [] # pylint: disable=no-member
         self.ground_program = GroundProgram()
         self.control.register_observer(Observer(self.ground_program))
 
     def add_program(self, program: str) -> None:
         with self.builder() as builder:
-            _clingo.parse_program(program, builder.add)
+            parse_string(program, builder.add)
 
     def builder(self) -> ProgramBuilder:
-        return ProgramBuilder(self.control.builder(), self.parsed_program)
+        return ProgramBuilder(self.control, self.parsed_program)
 
     def ground(self, parts: Iterable[Tuple[str, Iterable[Symbol]]], context: Any = None) -> None:
         self.control.ground(parts, context)
@@ -184,7 +107,7 @@ class Control(object):  # type: ignore
 
 
 
-    def add_to(self, control: Union['Control', _clingo.Control]):
+    def add_to(self, control: Union['Control', clingo.Control]):
         atoms_gen_to_test_map = dict()
         symbols_and_atoms = []
         with self.control.backend() as backend:
@@ -248,10 +171,7 @@ class Control(object):  # type: ignore
         return getattr(self.control, attr)
 
 
-
-
-
-class Observer(_clingo.Observer):
+class Observer(clingo.Observer):
 
     def __init__(self, program):
         self.program = program
@@ -279,11 +199,11 @@ class Application(object):
         raise NotImplementedError
 
 
-class ApplicationWrapper(_clingo.Application):
+class ApplicationWrapper(clingo.Application):
     def __init__(self, application):
         self.application = application
 
-    def main(self, control: _clingo.Control, files: Sequence[str]) -> None:
+    def main(self, control: clingo.Control, files: Sequence[str]) -> None:
         ext_control = Control(control=control)
         return self.application.main(ext_control, files)
 
@@ -294,4 +214,5 @@ class ApplicationWrapper(_clingo.Application):
 
 
 def clingo_main(application: Application, files: Iterable[str] = ()) -> int:
-    return _clingo.clingo_main(ApplicationWrapper(application), files)
+    return clingo.clingo_main(ApplicationWrapper(application), files)
+

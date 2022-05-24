@@ -44,7 +44,6 @@ class TestExamples(unittest.TestCase):
                      stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
         output = stdout.decode('utf-8')
-        # print(stderr.decode('utf-8'))
         world_views = parse_output(output)
         for world_view in world_views:
             world_view.sort()

@@ -3,6 +3,14 @@ from typing import Union
 from clingo import Symbol
 from clingo.ast import Sign # pylint: disable=import-error
 
+def sign2str(sign: Union[Sign, bool]):
+    literal_sign = ''
+    if (sign == Sign.Negation):
+        literal_sign = 'not '
+    elif (sign == Sign.DoubleNegation):
+        literal_sign = 'not not '
+    return literal_sign
+
 @dataclass(eq=True, unsafe_hash=True, order=True)
 class Literal:
     atom: Symbol
@@ -19,6 +27,9 @@ class Literal:
 
     def __repr__(self):
         return repr(self.sign) + repr(self.atom)
+    
+    def __str__(self):
+        return sign2str(self.sign) + str(self.atom)
 
 
 @dataclass(eq=True, unsafe_hash=True, order=True)
@@ -35,7 +46,8 @@ class EpistemicLiteral:
         self.is_m = is_m
 
     def __str__(self):
+        literal_sign = sign2str(self.sign)
         if not self.is_m:
-            return f'{self.sign}&k{{{self.objective_literal}}}'
+            return f'{literal_sign}&k{{{self.objective_literal}}}'
         else:
-            return f'{self.sign}&m{{{self.objective_literal}}}'
+            return f'{literal_sign}&m{{{self.objective_literal}}}'

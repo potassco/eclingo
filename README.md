@@ -2,7 +2,6 @@
 
 > A solver for Epistemic Logic Programs.
 
-![Travis](https://travis-ci.com/potassco/eclingo.svg?token=UsJRkwzSfzyEzdaYoHPd&branch=master&status=passed)
 ![GitHub](https://img.shields.io/github/license/potassco/eclingo?color=blue)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/potassco/eclingo)
 
@@ -15,8 +14,8 @@ Currently, `eclingo` can compute world views under the following semantics:
 
 ## Dependencies
 
-- `python 3.8
-- `clingo 5.5.0` Python module.
+- `python 3.9.12`
+- `clingo 5.5.2` Python module.
 
 ## Installation
 
@@ -24,9 +23,9 @@ Currently, `eclingo` can compute world views under the following semantics:
 
 Install the correct version of python and clingo:
 ```
-conda create --name eclingo-0.2.1-dev python=3.8
-conda activate eclingo-0.2.1-dev
-conda install mypy
+conda create --name eclingo python=3.9.12
+conda activate eclingo
+conda install -c potassco/label/dev clingo=5.5.2
 ```
 
 Clone this repo:
@@ -48,6 +47,8 @@ pip install .
 ```
 pip install -U pytest
 python3 -m pytest
+conda install -c mypy
+mypy eclingo
 ```
 
 ## Usage
@@ -62,7 +63,7 @@ python3 -m pytest
 
 #### Rules
 
-`eclingo` accepts rules with the same structure as `clingo` does. Additionally, `eclingo` allows these rules to include subjective literals in their body. These subjective literals are represented using the modal operator **K**, which is represented as `&k{}`. The expression inside the curly braces can be an explicit literal (that is, an atom `A` or its explicit negation `-A`) possibly preceded by default negation, that is represented inside the braces as `~`.
+`eclingo` accepts rules with the same structure as `clingo` does. Additionally, `eclingo` allows these rules to include subjective literals in their body. These subjective literals are represented using the modal operator **K**, which is represented as `&k{}`. The expression inside the curly braces can be an explicit literal (that is, an atom `A` or its explicit negation `-A`) possibly preceded by default negation, that is represented inside the braces as `not` (alternatively default negation can be represented as `~` for backward compatibility).
 
 > Modal operator **M** is not directly supported but `M q` can be replaced by the construction `not &k{ not q }`.
 

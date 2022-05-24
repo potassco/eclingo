@@ -7,6 +7,7 @@ from typing import Sequence
 
 from eclingo.config import AppConfig
 from eclingo.control import Control
+from eclingo.control import __version__
 from eclingo.internal_states import internal_control
 from eclingo.internal_states.internal_control import InternalStateControl
 
@@ -25,7 +26,7 @@ class Application(internal_control.Application):
 
     def __init__(self):
         self.program_name = "eclingo"
-        self.version = "0.2.1"
+        self.version = __version__
         self.config = AppConfig()
 
     def _parse_int(self, config, attr, min_value=None, max_value=None):

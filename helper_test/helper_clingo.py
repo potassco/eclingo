@@ -6,11 +6,6 @@ from . import helper
 
 class ClingoTestHelper(helper.TestHelper):
 
-    # def __init__(self):
-    #     self.printing = False
-    #     self.clingo_control: _clingoext.Control = None
-    #     self.program_added = False
-
     def setUp(self):
         super().setUp()
         self.clingo_control = _clingoext.Control(logger=silent_logger)

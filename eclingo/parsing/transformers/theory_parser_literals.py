@@ -3,12 +3,13 @@ Module with functions to transform theory elements into literals.
 """
 import clingo as _clingo
 from clingo import ast as _ast
-from . import transformer as _tf
 from . import astutil as _astutil
 
 # pylint: disable=all
 
 # {{{1 parse_raw_formula
+
+from clingo.ast import Transformer
 
 class TheoryParser:
     """
@@ -81,7 +82,7 @@ class TheoryParser:
         for element in x.elements:
             for operator in element.operators:
                 if not (operator, unary) in self.table:
-                    raise RuntimeError("invalid operator in: {}".format(_tf.str_location(x.location)))
+                    raise RuntimeError("invalid operator in: {}".format(x.location))
                 while not unary and self.__check(operator):
                     self.__reduce()
                 self.__stack.append((operator, unary))
@@ -100,7 +101,7 @@ def parse_raw_formula(x):
 
 # {{{1 theory_term -> term
 
-class TheoryTermToTermTransformer(_tf.Transformer):
+class TheoryTermToTermTransformer(Transformer):
     """
     This class transforms a given theory term into a plain term.
     """
@@ -111,7 +112,7 @@ class TheoryTermToTermTransformer(_tf.Transformer):
         if x.sequence_type == _ast.TheorySequenceType.Tuple:
             return _ast.Function(x.location, "", [self(a) for a in x.arguments], False)
         else:
-            raise RuntimeError("invalid term: {}".format(_tf.str_location(x.location)))
+            raise RuntimeError("invalid term: {}".format(x.location))
 
     def visit_TheoryFunction(self, x):
         """
@@ -133,13 +134,13 @@ class TheoryTermToTermTransformer(_tf.Transformer):
             if isnum(lhs) and isnum(rhs):
                 lhs = lhs.symbol.number
                 rhs = rhs.symbol.number
-                return _ast.Symbol(x.location, _clingo.Number(lhs + rhs if x.name == "+" else lhs - rhs))
+                return _ast.SymbolicTerm(x.location, _clingo.Number(lhs + rhs if x.name == "+" else lhs - rhs))
             else:
                 return _ast.BinaryOperation(x.location, op, lhs, rhs)
         elif x.name == "-" and len(x.arguments) == 2:
             return _ast.BinaryOperation(x.location, _ast.BinaryOperator.Minus, self(x.arguments[0]), self(x.arguments[1]))
         elif (x.name, TheoryParser.binary) in TheoryParser.table or (x.name, TheoryParser.unary) in TheoryParser.table:
-            raise RuntimeError("invalid term: {}".format(_tf.str_location(x.location)))
+            raise RuntimeError("invalid term: {}".format(x.location))
         else:
             return _ast.Function(x.location, x.name, [self(a) for a in x.arguments], False)
 
@@ -157,12 +158,12 @@ def theory_term_to_term(x):
 
 # {{{1 theory_term -> symbolic_atom
 
-class TheoryTermToLiteralTransformer(_tf.Transformer):
+class TheoryTermToLiteralTransformer(Transformer):
     """
     Turns the given theory term into an atom.
     """
 
-    def visit_Symbol(self, x, positive, sign):
+    def visit_SymbolicTerm(self, x, positive, sign):
         """
         Maps functions to atoms.
 
@@ -177,20 +178,20 @@ class TheoryTermToLiteralTransformer(_tf.Transformer):
             atom = _astutil.atom(x.location, positive == symbol.positive, symbol.name, [_ast.Symbol(x.location, a) for a in symbol.arguments])
             return _ast.Literal(x.location, sign, atom)
         else:
-            raise RuntimeError("invalid formula: {}".format(_tf.str_location(x.location)))
+            raise RuntimeError("invalid formula: {}".format(x.location))
 
     def visit_Variable(self, x, positive, sign):
         """
         Raises an error.
         """
-        raise RuntimeError("invalid formula: {}".format(_tf.str_location(x.location)))
+        raise RuntimeError("invalid formula: {}".format(x.location))
 
 
     def visit_TheoryTermSequence(self, x, positive, sign):
         """
         Raises an error.
         """
-        raise RuntimeError("invalid formula: {}".format(_tf.str_location(x.location)))
+        raise RuntimeError("invalid formula: {}".format(x.location))
 
     def visit_TheoryFunction(self, x, positive, sign):
         """
@@ -206,7 +207,7 @@ class TheoryTermToLiteralTransformer(_tf.Transformer):
             else:
                 return self.visit(x.arguments[0], positive, _ast.Sign.Negation)
         elif (x.name, TheoryParser.binary) in TheoryParser.table or (x.name, TheoryParser.unary) in TheoryParser.table:
-            raise RuntimeError("invalid term: {}".format(_tf.str_location(x.location)))
+            raise RuntimeError("invalid term: {}".format(x.location))
         else:
             atom = _astutil.atom(x.location, positive, x.name, [theory_term_to_term(a) for a in x.arguments])
             return _ast.Literal(x.location, sign, atom)
