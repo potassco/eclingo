@@ -39,7 +39,6 @@ git checkout develop
 Change your directory and install `eclingo`:
 ```
 cd eclingo/
-conda install clingo-5.5.0-py38lua53hf484d3e_20.tar.bz2
 pip install .
 ```
 
