@@ -2,6 +2,7 @@ from eclingo import internal_states
 from eclingo.internal_states import ShowStatement
 import unittest
 import clingo
+import clingo.ast as _ast
 from eclingo.util.astutil import ast_repr as _ast_repr
 from eclingo.parsing import parse_program as _parse_program
 
@@ -9,7 +10,7 @@ from eclingo.parsing import parse_program as _parse_program
 def parse_formula(stm):
     ret = []
     prg = clingo.Control(message_limit=0)
-    clingo.parse_program(stm + ".", ret.append)
+    _ast.parse_string(stm + ".", ret.append)
     return ret[-1]
 
 def flatten(lst):
@@ -17,9 +18,10 @@ def flatten(lst):
     for lst2 in lst:
         if isinstance(lst2, list):
             for e in lst2:
-                result.append(e)
+                result.append(str(e))
         else:
-            result.append(lst2)
+            result.append(str(lst2))
+        
     return result
 
 def parse_program(stm, parameters=[], name="base"):
@@ -29,7 +31,8 @@ def parse_program(stm, parameters=[], name="base"):
 
 def clingo_parse_program(stm):
     ret = []
-    clingo.parse_program(stm, ret.append)
+    _ast.parse_string(stm, ret.append)
+    ret = [str(rule) for rule in ret]
     return ret
 
 class TestCase(unittest.TestCase):

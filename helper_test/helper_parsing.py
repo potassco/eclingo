@@ -2,6 +2,8 @@ import unittest
 
 import clingo as _clingo
 
+import clingo.ast as _ast
+
 from eclingo.util import clingoext as _clingoext
 from eclingo.util.logger import silent_logger
 from eclingo.util.astutil import ast_repr as _ast_repr
@@ -34,7 +36,7 @@ class ParsingTestHelper(helper.TestHelper):
 
     def clingo_parse_program(self, stm):
         ret = []
-        _clingo.parse_program(stm, ret.append)
+        _ast.parse_string(stm, ret.append)
         return ret
 
     def assert_equal_parsing_program(self, program, expected_program):

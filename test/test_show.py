@@ -1,4 +1,5 @@
 from clingo import ast as _ast
+from clingo.ast import  parse_string, Location, Position
 
 from eclingo.util.groundprogram import *
 from eclingo.internal_states import ShowStatement
@@ -24,12 +25,12 @@ class Test(ClingoTestHelper,
             """
         parsed_program = [
             _ast.Program( # pylint: disable=no-member
-                location = {'begin': {'filename': '<string>', 'line': 1, 'column': 1}, 'end': {'filename': '<string>', 'line': 1, 'column': 1}},
+                Location(begin=Position(filename='<string>', line=1, column=1), end=Position(filename='<string>', line=1, column=1)),
                 name = 'base',
                 parameters = []
                 ),
             _ast.ShowSignature( # pylint: disable=no-member
-                location = {'begin': {'filename': '<string>', 'line': 2, 'column': 13}, 'end': {'filename': '<string>', 'line': 2, 'column': 23}},
+                Location(begin=Position(filename='<string>', line=2, column=13), end=Position(filename='<string>', line=2, column=23)),
                 name = 'a',
                 arity = 0,
                 positive = True,
@@ -61,12 +62,12 @@ class Test(ClingoTestHelper,
             """
         parsed_program = [
             _ast.Program(    # pylint: disable=no-member
-                location = {'begin': {'filename': '<string>', 'line': 1, 'column': 1}, 'end': {'filename': '<string>', 'line': 1, 'column': 1}},
+                Location(begin=Position(filename='<string>', line=1, column=1), end=Position(filename='<string>', line=1, column=1)),
                 name = 'base',
                 parameters = []
                 ),
             _ast.ShowSignature(    # pylint: disable=no-member
-                location = {'begin': {'filename': '<string>', 'line': 2, 'column': 13}, 'end': {'filename': '<string>', 'line': 2, 'column': 23}},
+                Location(begin=Position(filename='<string>', line=2, column=13), end=Position(filename='<string>', line=2, column=23)),
                 name = 'a',
                 arity = 0,
                 positive = False,
@@ -95,7 +96,7 @@ class Test(ClingoTestHelper,
     def test_show03_not_supported(self):
         with self.assertRaises(RuntimeError) as contex_manager:
             self.parse_program("a. b. #show a(0).")
-        self.assertEqual(contex_manager.exception.args[0], 'syntax error: only show statements of the form "#show atom/n." are allowed.')
+        self.assertEqual(str(contex_manager.exception.args[0]), 'syntax error: only show statements of the form "#show atom/n." are allowed.')
 
     def test_show04(self):
         self.assert_equal_parsing_program_with_show("a. #show a/0.", "u_a.", [ShowStatement(name='a', arity=0, poistive=True)])

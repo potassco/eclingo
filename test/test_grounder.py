@@ -60,6 +60,9 @@ class TestCase(unittest.TestCase):
 
 class Test(TestCase):
 
+    def test_epistemic_atom0(self):
+        self.assertEqualPrograms(self.ground_program("{a}."), ["{u_a}."])
+
     def test_epistemic_atom(self):
         self.assertEqualPrograms(self.ground_program("{a}. b :- &k{a}."), ["{u_a}.", "u_b :- k_u_a.", "{k_u_a} :- u_a."])
 

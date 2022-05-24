@@ -4,7 +4,6 @@ from collections.abc import Iterable
 from typing import Dict, List, Sequence, Set, Tuple, Union, Iterable as IterableType
 from clingo import Symbol, TruthValue, Function
 from eclingo.literals import Literal
-# from eclingo.util.prettygroundprogram import PrettyGroundProgram
 
 
 class ClingoObject(object):
@@ -75,7 +74,6 @@ class ClingoProject(ClingoObject):
 ClingoExternal   = namedtuple('ClingoExternal', ['atom', 'value'])
 ClingoHeuristic  = namedtuple('ClingoHeuristic', ['atom', 'type', 'bias', 'priority', 'condition'])
 ClingoMinimize   = namedtuple('ClingoMinimize', ['priority', 'literals'])
-# ClingoWeightRule = namedtuple('ClingoWeightRule', ['choice', 'head', 'body', 'lower'])
 ClingoAssume     = namedtuple('ClingoAssume', ['literals'])
 
 @dataclass
@@ -109,78 +107,6 @@ class GroundProgram():
     def __iter__(self):
         return iter(self.objects)
 
-    # def add_external(self, external: Union[External, ClingoExternal]) -> None:
-    #     if isinstance(external, ClingoExternal):
-    #         external = self._rewrite_external(external)
-    #     self.externals.append(external)
-
-    # def add_assume(self, literals: List[int]) -> None:
-    #     self.assumtions.append(ClingoAssume(literals))
-
-    # def add_external(self, atom: int, value: TruthValue = TruthValue.False_) -> None:
-    #     self.externals.append(ClingoExternal(atom, value))
-
-    # def add_heuristic(self, atom: int, type: HeuristicType, bias: int, priority: int, condition: List[int]) -> None:
-    #     self.externals.append(ClingoHeuristic(atom, type, bias, condition))
-
-    # def add_minimize(self, priority: int, literals: List[Tuple[int, int]]) -> None:
-    #     self.externals.append(ClingoMinimize(priority, literals))
-
-    # def add_project(self, atoms: List[int]) -> None:
-    #     self.externals.append(ClingoProject(atoms))
-
-    # def add_weight_rule(self, head: List[int], lower: int, body: List[Tuple[int, int]], choice: bool = False) -> None:
-    #     self.externals.append(ClingoWeightRule(choice, head, body, lower))
-
-
-    # def as_list(self):
-    #     return self.facts + self.rules + self.output_atoms
-
-    # def __repr__(self):
-    #     facts = '.\n'.join(repr(x) for x in self.facts)
-    #     if facts:
-    #         result = facts + '.'
-    #     else:
-    #         result = ''
-    #     if self.cfacts:
-    #         if result:
-    #             result += '\n\n'
-    #         result += '\n'.join(repr(x) for x in self.cfacts)
-    #     if self.dfacts:
-    #         if result:
-    #             result += '\n\n'
-    #         result += '\n'.join(repr(x) for x in self.dfacts)
-    #     if self.rules:
-    #         if result:
-    #             result += '\n\n'
-    #         result += '\n'.join(repr(x) for x in self.rules)
-    #     # if self.output_atoms:
-    #     #     if result:
-    #     #         result += '\n\n'
-    #     #     result += '\n'.join(repr(x) for x in self.output_atoms)
-    #     if self.assumtions:
-    #         if result:
-    #             result += '\n\n'
-    #         result += '\n'.join(repr(x) for x in self.assumtions)
-    #     if self.externals:
-    #         if result:
-    #             result += '\n\n'
-    #         result += '\n'.join(repr(x) for x in self.externals)
-    #     if self.heuristics:
-    #         if result:
-    #             result += '\n\n'
-    #         result += '\n'.join(repr(x) for x in self.heuristics)
-    #     if self.minimizes:
-    #         if result:
-    #             result += '\n\n'
-    #         result += '\n'.join(repr(x) for x in self.minimizes)
-    #     if self.projections:
-    #         if result:
-    #             result += '\n\n'
-    #         result += '\n'.join(repr(x) for x in self.projections)
-    #     if self.weight_rules:
-    #         result += '\n'.join(repr(x) for x in self.weight_rules)
-    #     return result
 
 class PrettyClingoOject:
     pass
@@ -211,11 +137,25 @@ class PrettyRule(PrettyClingoOject):
         else:
             return head + body + '.'
 
+    def __str__(self):
+        if self.head:
+            head = ', '.join(str(x) for x in self.head)
+            if self.choice:
+                head = '{' + head + '}'
+        else:
+            head = ''
+        if self.body:
+            body = ':- ' + ', '.join(str(x) for x in self.body)
+        else:
+            body = ''
+        if head and body:
+            return head + ' ' + body + '.'
+        else:
+            return head + body + '.'
+
     def __lt__(self, other):
         if self.__class__ == other.__class__:
             return (self.choice, self.head, self.body) < (other.choice, other.head, other.body)
-        # elif isinstance(other, ClingoObject):
-        #     return self.order < other.order
         raise Exception("Incomparable type")
 
 
@@ -232,12 +172,17 @@ class PrettyProjection(PrettyClingoOject):
             return '#project ' + atoms  + '.'
         else:
             return '#project.'
+    
+    def __str__(self):
+        atoms = ','.join(str(atom) for atom in self.atoms)
+        if atoms:
+            return '#project ' + atoms  + '.'
+        else:
+            return '#project.'
 
     def __lt__(self, other):
         if self.__class__ == other.__class__:
             return self.atoms < other.atoms
-        # elif isinstance(other, ClingoObject):
-        #     return self.order < other.order
         raise Exception("Incomparable type")
 
 
@@ -249,6 +194,9 @@ class PrettyExternal(PrettyClingoOject):
 
     def __repr__(self):
         return '#external ' + repr(self.atom) + ' [' + ('True' if self.value else 'False') + '].'
+    
+    def __str__(self):
+        return '#external ' + str(self.atom) + ' [' + ('True' if self.value else 'False') + '].'
 
 class PrettyGroundProgram():
 
@@ -411,10 +359,6 @@ class PrettyGroundProgram():
             result += '\n'.join(repr(x) for x in self.rules)
         if self.weight_rules:
             result += '\n'.join(repr(x) for x in self.weight_rules)
-        # if self.output_atoms:
-        #     if result:
-        #         result += '\n\n'
-        #     result += '\n'.join(repr(x) for x in self.output_atoms)
         if self.assumtions:
             if result:
                 result += '\n\n'
@@ -435,4 +379,51 @@ class PrettyGroundProgram():
             if result:
                 result += '\n\n'
             result += '\n'.join(repr(x) for x in self.projections)
+        return result
+
+
+
+    def __str__(self):
+        self.sort()
+        facts = '.\n'.join(str(x) for x in self.facts)
+
+        if facts:
+            result = facts + '.'
+        else:
+            result = ''
+        if self.cfacts:
+            if result:
+                result += '\n\n'
+            result += '\n'.join(str(x) for x in self.cfacts)
+        if self.dfacts:
+            if result:
+                result += '\n\n'
+            result += '\n'.join(str(x) for x in self.dfacts)
+
+        if self.rules:
+            if result:
+                result += '\n\n'
+            result += '\n'.join(str(x) for x in self.rules)
+        if self.weight_rules:
+            result += '\n'.join(str(x) for x in self.weight_rules)
+        if self.assumtions:
+            if result:
+                result += '\n\n'
+            result += '\n'.join(str(x) for x in self.assumtions)
+        if self.externals:
+            if result:
+                result += '\n\n'
+            result += '\n'.join(str(x) for x in self.externals)
+        if self.heuristics:
+            if result:
+                result += '\n\n'
+            result += '\n'.join(str(x) for x in self.heuristics)
+        if self.minimizes:
+            if result:
+                result += '\n\n'
+            result += '\n'.join(str(x) for x in self.minimizes)
+        if self.projections:
+            if result:
+                result += '\n\n'
+            result += '\n'.join(str(x) for x in self.projections)
         return result
