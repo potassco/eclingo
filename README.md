@@ -16,7 +16,7 @@ Currently, `eclingo` can compute world views under the following semantics:
 
 For more infomration see:
 
-Pedro Cabalar, Jorge Fandinno, Javier Garea, Javier Romero, Torsten Schaub. <em>eclingo : A Solver for Epistemic Logic Programs.</em> Theory and Practice of Logic Program. 
+Pedro Cabalar, Jorge Fandinno, Javier Garea, Javier Romero, Torsten Schaub, 2020. <em>eclingo : A Solver for Epistemic Logic Programs.</em> Theory and Practice of Logic Program. 
 
 ## Dependencies
 
