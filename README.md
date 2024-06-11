@@ -14,7 +14,7 @@ Currently, `eclingo` can compute world views under the following semantics:
 - Gelfond 1991; Gelfond and Przymusinska 1993; Gelfond 1994 (G94) [[1, 2, 3]](#references)
 - Kahl et al. 2015 (K15) [[4]](#references)
 
-For more infomration see:
+For more information see:
 
 Pedro Cabalar, Jorge Fandinno, Javier Garea, Javier Romero, Torsten Schaub, 2020. <em>eclingo : A Solver for Epistemic Logic Programs.</em> Theory and Practice of Logic Program. 
 
