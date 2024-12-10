@@ -6,7 +6,7 @@ from eclingo.postprocessor.postprocessor import Postprocessor
 from eclingo.utils.logger import logger, silent_logger
 
 
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 __optimization__ = 3
 
 
