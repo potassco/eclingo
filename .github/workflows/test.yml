@@ -47,6 +47,11 @@ jobs:
         python -VV
         pip list
 
-    - name: run tests
+    - name: run all tests and static checks
+      if: matrix.python-version == '3.12' && matrix.clingo-version == '>=5.7.0,<5.8.0'
       run: nox -r
+
+    - name: run only tests
+      if: matrix.python-version != '3.12' || matrix.clingo-version != '>=5.7.0,<5.8.0'
+      run: nox -rs all_tests
 
