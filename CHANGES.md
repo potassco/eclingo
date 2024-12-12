@@ -1,8 +1,5 @@
 # Changes
-
-## eclingo 0.5 (wip)
-  * reification and meta-programming included
-    
+   
 ## eclingo 1.2.0
   * allows to use "not" inside epistemic literals. Now "a :- &k{ not b}." is a valid program.
   * works with (and requires) clingo 5.5.2 and python 3.9.
