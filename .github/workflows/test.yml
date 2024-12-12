@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: eclingo ${{ matrix.python-version }} ${{ matrix.os }} ${{ matrix.clingo-version }}
+    name: eclingo ${{ matrix.os }} - python${{ matrix.python-version }} - clingo ${{ matrix.clingo-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
