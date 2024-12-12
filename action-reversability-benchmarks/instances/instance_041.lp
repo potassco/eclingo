@@ -1,0 +1,305 @@
+%---------------------------------------
+% domain
+%---------------------------------------
+
+% utils
+boolean(true).
+boolean(false).
+
+% types
+type(type("object")).
+
+% variables
+variable(variable("f0")).
+variable(variable("f1")).
+variable(variable("f2")).
+variable(variable("f3")).
+variable(variable("f4")).
+variable(variable("f5")).
+variable(variable("f6")).
+variable(variable("f7")).
+variable(variable("f8")).
+variable(variable("f9")).
+variable(variable("f10")).
+variable(variable("f11")).
+variable(variable("f12")).
+variable(variable("f13")).
+variable(variable("f14")).
+variable(variable("f15")).
+variable(variable("f16")).
+variable(variable("f17")).
+variable(variable("f18")).
+variable(variable("f19")).
+variable(variable("f20")).
+variable(variable("f21")).
+variable(variable("f22")).
+variable(variable("f23")).
+variable(variable("f24")).
+variable(variable("f25")).
+variable(variable("f26")).
+variable(variable("f27")).
+variable(variable("f28")).
+variable(variable("f29")).
+variable(variable("f30")).
+variable(variable("f31")).
+variable(variable("f32")).
+variable(variable("f33")).
+variable(variable("f34")).
+variable(variable("f35")).
+variable(variable("f36")).
+variable(variable("f37")).
+variable(variable("f38")).
+variable(variable("f39")).
+variable(variable("f40")).
+
+contains(X, value(X, B)) :- variable(X), boolean(B).
+
+% actions
+action(action("del-all")).
+precondition(action("del-all"), variable("f0"), value(variable("f0"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f1"), value(variable("f1"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f2"), value(variable("f2"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f3"), value(variable("f3"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f4"), value(variable("f4"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f5"), value(variable("f5"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f6"), value(variable("f6"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f7"), value(variable("f7"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f8"), value(variable("f8"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f9"), value(variable("f9"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f10"), value(variable("f10"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f11"), value(variable("f11"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f12"), value(variable("f12"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f13"), value(variable("f13"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f14"), value(variable("f14"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f15"), value(variable("f15"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f16"), value(variable("f16"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f17"), value(variable("f17"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f18"), value(variable("f18"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f19"), value(variable("f19"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f20"), value(variable("f20"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f21"), value(variable("f21"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f22"), value(variable("f22"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f23"), value(variable("f23"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f24"), value(variable("f24"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f25"), value(variable("f25"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f26"), value(variable("f26"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f27"), value(variable("f27"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f28"), value(variable("f28"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f29"), value(variable("f29"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f30"), value(variable("f30"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f31"), value(variable("f31"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f32"), value(variable("f32"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f33"), value(variable("f33"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f34"), value(variable("f34"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f35"), value(variable("f35"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f36"), value(variable("f36"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f37"), value(variable("f37"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f38"), value(variable("f38"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f39"), value(variable("f39"), true)) :- action(action("del-all")).
+precondition(action("del-all"), variable("f40"), value(variable("f40"), true)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f0"), value(variable("f0"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f1"), value(variable("f1"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f2"), value(variable("f2"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f3"), value(variable("f3"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f4"), value(variable("f4"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f5"), value(variable("f5"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f6"), value(variable("f6"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f7"), value(variable("f7"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f8"), value(variable("f8"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f9"), value(variable("f9"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f10"), value(variable("f10"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f11"), value(variable("f11"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f12"), value(variable("f12"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f13"), value(variable("f13"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f14"), value(variable("f14"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f15"), value(variable("f15"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f16"), value(variable("f16"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f17"), value(variable("f17"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f18"), value(variable("f18"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f19"), value(variable("f19"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f20"), value(variable("f20"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f21"), value(variable("f21"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f22"), value(variable("f22"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f23"), value(variable("f23"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f24"), value(variable("f24"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f25"), value(variable("f25"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f26"), value(variable("f26"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f27"), value(variable("f27"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f28"), value(variable("f28"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f29"), value(variable("f29"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f30"), value(variable("f30"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f31"), value(variable("f31"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f32"), value(variable("f32"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f33"), value(variable("f33"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f34"), value(variable("f34"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f35"), value(variable("f35"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f36"), value(variable("f36"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f37"), value(variable("f37"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f38"), value(variable("f38"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f39"), value(variable("f39"), false)) :- action(action("del-all")).
+postcondition(action("del-all"), effect(unconditional), variable("f40"), value(variable("f40"), false)) :- action(action("del-all")).
+
+action(action("add-f0")).
+postcondition(action("add-f0"), effect(unconditional), variable("f0"), value(variable("f0"), true)) :- action(action("add-f0")).
+
+action(action("add-f1")).
+precondition(action("add-f1"), variable("f0"), value(variable("f0"), true)) :- action(action("add-f1")).
+postcondition(action("add-f1"), effect(unconditional), variable("f1"), value(variable("f1"), true)) :- action(action("add-f1")).
+
+action(action("add-f2")).
+precondition(action("add-f2"), variable("f1"), value(variable("f1"), true)) :- action(action("add-f2")).
+postcondition(action("add-f2"), effect(unconditional), variable("f2"), value(variable("f2"), true)) :- action(action("add-f2")).
+
+action(action("add-f3")).
+precondition(action("add-f3"), variable("f2"), value(variable("f2"), true)) :- action(action("add-f3")).
+postcondition(action("add-f3"), effect(unconditional), variable("f3"), value(variable("f3"), true)) :- action(action("add-f3")).
+
+action(action("add-f4")).
+precondition(action("add-f4"), variable("f3"), value(variable("f3"), true)) :- action(action("add-f4")).
+postcondition(action("add-f4"), effect(unconditional), variable("f4"), value(variable("f4"), true)) :- action(action("add-f4")).
+
+action(action("add-f5")).
+precondition(action("add-f5"), variable("f4"), value(variable("f4"), true)) :- action(action("add-f5")).
+postcondition(action("add-f5"), effect(unconditional), variable("f5"), value(variable("f5"), true)) :- action(action("add-f5")).
+
+action(action("add-f6")).
+precondition(action("add-f6"), variable("f5"), value(variable("f5"), true)) :- action(action("add-f6")).
+postcondition(action("add-f6"), effect(unconditional), variable("f6"), value(variable("f6"), true)) :- action(action("add-f6")).
+
+action(action("add-f7")).
+precondition(action("add-f7"), variable("f6"), value(variable("f6"), true)) :- action(action("add-f7")).
+postcondition(action("add-f7"), effect(unconditional), variable("f7"), value(variable("f7"), true)) :- action(action("add-f7")).
+
+action(action("add-f8")).
+precondition(action("add-f8"), variable("f7"), value(variable("f7"), true)) :- action(action("add-f8")).
+postcondition(action("add-f8"), effect(unconditional), variable("f8"), value(variable("f8"), true)) :- action(action("add-f8")).
+
+action(action("add-f9")).
+precondition(action("add-f9"), variable("f8"), value(variable("f8"), true)) :- action(action("add-f9")).
+postcondition(action("add-f9"), effect(unconditional), variable("f9"), value(variable("f9"), true)) :- action(action("add-f9")).
+
+action(action("add-f10")).
+precondition(action("add-f10"), variable("f9"), value(variable("f9"), true)) :- action(action("add-f10")).
+postcondition(action("add-f10"), effect(unconditional), variable("f10"), value(variable("f10"), true)) :- action(action("add-f10")).
+
+action(action("add-f11")).
+precondition(action("add-f11"), variable("f10"), value(variable("f10"), true)) :- action(action("add-f11")).
+postcondition(action("add-f11"), effect(unconditional), variable("f11"), value(variable("f11"), true)) :- action(action("add-f11")).
+
+action(action("add-f12")).
+precondition(action("add-f12"), variable("f11"), value(variable("f11"), true)) :- action(action("add-f12")).
+postcondition(action("add-f12"), effect(unconditional), variable("f12"), value(variable("f12"), true)) :- action(action("add-f12")).
+
+action(action("add-f13")).
+precondition(action("add-f13"), variable("f12"), value(variable("f12"), true)) :- action(action("add-f13")).
+postcondition(action("add-f13"), effect(unconditional), variable("f13"), value(variable("f13"), true)) :- action(action("add-f13")).
+
+action(action("add-f14")).
+precondition(action("add-f14"), variable("f13"), value(variable("f13"), true)) :- action(action("add-f14")).
+postcondition(action("add-f14"), effect(unconditional), variable("f14"), value(variable("f14"), true)) :- action(action("add-f14")).
+
+action(action("add-f15")).
+precondition(action("add-f15"), variable("f14"), value(variable("f14"), true)) :- action(action("add-f15")).
+postcondition(action("add-f15"), effect(unconditional), variable("f15"), value(variable("f15"), true)) :- action(action("add-f15")).
+
+action(action("add-f16")).
+precondition(action("add-f16"), variable("f15"), value(variable("f15"), true)) :- action(action("add-f16")).
+postcondition(action("add-f16"), effect(unconditional), variable("f16"), value(variable("f16"), true)) :- action(action("add-f16")).
+
+action(action("add-f17")).
+precondition(action("add-f17"), variable("f16"), value(variable("f16"), true)) :- action(action("add-f17")).
+postcondition(action("add-f17"), effect(unconditional), variable("f17"), value(variable("f17"), true)) :- action(action("add-f17")).
+
+action(action("add-f18")).
+precondition(action("add-f18"), variable("f17"), value(variable("f17"), true)) :- action(action("add-f18")).
+postcondition(action("add-f18"), effect(unconditional), variable("f18"), value(variable("f18"), true)) :- action(action("add-f18")).
+
+action(action("add-f19")).
+precondition(action("add-f19"), variable("f18"), value(variable("f18"), true)) :- action(action("add-f19")).
+postcondition(action("add-f19"), effect(unconditional), variable("f19"), value(variable("f19"), true)) :- action(action("add-f19")).
+
+action(action("add-f20")).
+precondition(action("add-f20"), variable("f19"), value(variable("f19"), true)) :- action(action("add-f20")).
+postcondition(action("add-f20"), effect(unconditional), variable("f20"), value(variable("f20"), true)) :- action(action("add-f20")).
+
+action(action("add-f21")).
+precondition(action("add-f21"), variable("f20"), value(variable("f20"), true)) :- action(action("add-f21")).
+postcondition(action("add-f21"), effect(unconditional), variable("f21"), value(variable("f21"), true)) :- action(action("add-f21")).
+
+action(action("add-f22")).
+precondition(action("add-f22"), variable("f21"), value(variable("f21"), true)) :- action(action("add-f22")).
+postcondition(action("add-f22"), effect(unconditional), variable("f22"), value(variable("f22"), true)) :- action(action("add-f22")).
+
+action(action("add-f23")).
+precondition(action("add-f23"), variable("f22"), value(variable("f22"), true)) :- action(action("add-f23")).
+postcondition(action("add-f23"), effect(unconditional), variable("f23"), value(variable("f23"), true)) :- action(action("add-f23")).
+
+action(action("add-f24")).
+precondition(action("add-f24"), variable("f23"), value(variable("f23"), true)) :- action(action("add-f24")).
+postcondition(action("add-f24"), effect(unconditional), variable("f24"), value(variable("f24"), true)) :- action(action("add-f24")).
+
+action(action("add-f25")).
+precondition(action("add-f25"), variable("f24"), value(variable("f24"), true)) :- action(action("add-f25")).
+postcondition(action("add-f25"), effect(unconditional), variable("f25"), value(variable("f25"), true)) :- action(action("add-f25")).
+
+action(action("add-f26")).
+precondition(action("add-f26"), variable("f25"), value(variable("f25"), true)) :- action(action("add-f26")).
+postcondition(action("add-f26"), effect(unconditional), variable("f26"), value(variable("f26"), true)) :- action(action("add-f26")).
+
+action(action("add-f27")).
+precondition(action("add-f27"), variable("f26"), value(variable("f26"), true)) :- action(action("add-f27")).
+postcondition(action("add-f27"), effect(unconditional), variable("f27"), value(variable("f27"), true)) :- action(action("add-f27")).
+
+action(action("add-f28")).
+precondition(action("add-f28"), variable("f27"), value(variable("f27"), true)) :- action(action("add-f28")).
+postcondition(action("add-f28"), effect(unconditional), variable("f28"), value(variable("f28"), true)) :- action(action("add-f28")).
+
+action(action("add-f29")).
+precondition(action("add-f29"), variable("f28"), value(variable("f28"), true)) :- action(action("add-f29")).
+postcondition(action("add-f29"), effect(unconditional), variable("f29"), value(variable("f29"), true)) :- action(action("add-f29")).
+
+action(action("add-f30")).
+precondition(action("add-f30"), variable("f29"), value(variable("f29"), true)) :- action(action("add-f30")).
+postcondition(action("add-f30"), effect(unconditional), variable("f30"), value(variable("f30"), true)) :- action(action("add-f30")).
+
+action(action("add-f31")).
+precondition(action("add-f31"), variable("f30"), value(variable("f30"), true)) :- action(action("add-f31")).
+postcondition(action("add-f31"), effect(unconditional), variable("f31"), value(variable("f31"), true)) :- action(action("add-f31")).
+
+action(action("add-f32")).
+precondition(action("add-f32"), variable("f31"), value(variable("f31"), true)) :- action(action("add-f32")).
+postcondition(action("add-f32"), effect(unconditional), variable("f32"), value(variable("f32"), true)) :- action(action("add-f32")).
+
+action(action("add-f33")).
+precondition(action("add-f33"), variable("f32"), value(variable("f32"), true)) :- action(action("add-f33")).
+postcondition(action("add-f33"), effect(unconditional), variable("f33"), value(variable("f33"), true)) :- action(action("add-f33")).
+
+action(action("add-f34")).
+precondition(action("add-f34"), variable("f33"), value(variable("f33"), true)) :- action(action("add-f34")).
+postcondition(action("add-f34"), effect(unconditional), variable("f34"), value(variable("f34"), true)) :- action(action("add-f34")).
+
+action(action("add-f35")).
+precondition(action("add-f35"), variable("f34"), value(variable("f34"), true)) :- action(action("add-f35")).
+postcondition(action("add-f35"), effect(unconditional), variable("f35"), value(variable("f35"), true)) :- action(action("add-f35")).
+
+action(action("add-f36")).
+precondition(action("add-f36"), variable("f35"), value(variable("f35"), true)) :- action(action("add-f36")).
+postcondition(action("add-f36"), effect(unconditional), variable("f36"), value(variable("f36"), true)) :- action(action("add-f36")).
+
+action(action("add-f37")).
+precondition(action("add-f37"), variable("f36"), value(variable("f36"), true)) :- action(action("add-f37")).
+postcondition(action("add-f37"), effect(unconditional), variable("f37"), value(variable("f37"), true)) :- action(action("add-f37")).
+
+action(action("add-f38")).
+precondition(action("add-f38"), variable("f37"), value(variable("f37"), true)) :- action(action("add-f38")).
+postcondition(action("add-f38"), effect(unconditional), variable("f38"), value(variable("f38"), true)) :- action(action("add-f38")).
+
+action(action("add-f39")).
+precondition(action("add-f39"), variable("f38"), value(variable("f38"), true)) :- action(action("add-f39")).
+postcondition(action("add-f39"), effect(unconditional), variable("f39"), value(variable("f39"), true)) :- action(action("add-f39")).
+
+action(action("add-f40")).
+precondition(action("add-f40"), variable("f39"), value(variable("f39"), true)) :- action(action("add-f40")).
+postcondition(action("add-f40"), effect(unconditional), variable("f40"), value(variable("f40"), true)) :- action(action("add-f40")).
+
+horizon(41).

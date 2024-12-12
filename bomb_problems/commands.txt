@@ -1,0 +1,1 @@
+$eclingo bt_conf.lp -c np=10 -c length=10 --stat

@@ -1,0 +1,3 @@
+[
+[&k{eligible(mary)}, &k{eligible(nancy)}, &k{eligible(paul)}, &k{eligible(sam)}, &k{eligible(tim)}]
+]

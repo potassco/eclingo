@@ -1,0 +1,6 @@
+[
+[&k{occurs(aim,2)}, &k{occurs(aim,6)}, &k{occurs(cock,0)}, &k{occurs(cock,4)}, &k{occurs(fire,3)}, &k{occurs(fire,7)}, &k{occurs(load,1)}, &k{occurs(load,5)}],
+[&k{occurs(aim,2)}, &k{occurs(aim,6)}, &k{occurs(cock,0)}, &k{occurs(cock,5)}, &k{occurs(fire,3)}, &k{occurs(fire,7)}, &k{occurs(load,1)}, &k{occurs(load,4)}],
+[&k{occurs(aim,2)}, &k{occurs(aim,6)}, &k{occurs(cock,1)}, &k{occurs(cock,4)}, &k{occurs(fire,3)}, &k{occurs(fire,7)}, &k{occurs(load,0)}, &k{occurs(load,5)}],
+[&k{occurs(aim,2)}, &k{occurs(aim,6)}, &k{occurs(cock,1)}, &k{occurs(cock,5)}, &k{occurs(fire,3)}, &k{occurs(fire,7)}, &k{occurs(load,0)}, &k{occurs(load,4)}]
+]

@@ -1,0 +1,12 @@
+[flake8]
+max-line-length=120
+exclude =
+    .git
+    .github
+    src/eclingo/internal_states/
+    src/eclingo/solver/
+    src/eclingo/parsing/transformers/theory_parser_epistemic.py
+    src/eclingo/parsing/parser.py
+    src/eclingo/grounder.py
+    src/eclingo/parsing/transformers/parser_negations.py
+    src/eclingo/control.py

@@ -1,0 +1,11 @@
+[run]**
+[report]
+show_missing = True
+omit =
+    */tests/*
+    */helper_test/*
+exclude_lines =
+    pragma: no cover
+    nocoverage
+    assert
+    if __name__ == .__main__.:

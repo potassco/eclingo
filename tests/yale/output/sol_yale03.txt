@@ -1,0 +1,3 @@
+[
+[&k{occurs(load,1)}, &k{occurs(pull_trigger,0)}, &k{occurs(pull_trigger,2)}]
+]
