@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install "clingo${{ matrix.clingo-version }}"
-        python -m pip installclingox==1.2.1.post2 --extra-index-url https://test.pypi.org/simple/
+        python -m pip install clingox==1.2.1.post2 --extra-index-url https://test.pypi.org/simple/
         python -m pip install nox
         python -m pip install isort
     
